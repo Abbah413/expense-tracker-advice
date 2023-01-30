@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Import CSV
+
+{% endblock %}
+
+{% block main %}
+    <div class="row py-5 justify-content-center">
+        <div class="col-5">
+            <form action="/import" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <input type="file" class="form-control" id="inputGroupFile04" name="file" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    <button class="btn btn-primary" type="submit" id="inputGroupFileAddon04">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
