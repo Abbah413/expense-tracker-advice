@@ -275,3 +275,10 @@ document.addEventListener("change", (e) => {
                     <input type="text" value="testing">
                 </data>
             </div>
+
+
+
+                                    <option selected disabled>Sort</option>
+                        <option value="1">Date</option>
+                        <option value="2">Amount</option>
+                        <option value="3">Type</option>
