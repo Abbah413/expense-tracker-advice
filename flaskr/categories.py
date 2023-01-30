@@ -1,10 +1,9 @@
 import csv
-import os
-from flask import session, g
+from flask import session
 from flaskr.db import get_db
 from datetime import datetime
 
-fieldnames = ['date', 'amount', 'description', 'type', 'id']
+fieldnames = ['date', 'bank', 'amount', 'description', 'type', 'id']
 
 def format_output(filename):
     db = get_db()
@@ -13,9 +12,9 @@ def format_output(filename):
         reader = csv.DictReader(csvfile, fieldnames=fieldnames)
         for row in reader:
             db.execute(
-                'INSERT INTO transactions (transacted, uploaded, amount, description, category, user_id)'
-                'VALUES (?, ?, ?, ?, ?, ?)',
-                (row['date'], datetime.now(), row['amount'], row['description'], row['type'], session['user_id'])
+                'INSERT INTO transactions (transacted, uploaded, bank, amount, description, category, user_id)'
+                'VALUES (?, ?, ?, ?, ?, ?, ?)',
+                (row['date'], datetime.now(), row['bank'], row['amount'], row['description'], row['type'], session['user_id'])
                 )
             db.commit()
 

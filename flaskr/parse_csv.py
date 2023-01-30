@@ -23,6 +23,7 @@ def export_file(output, filename):
 def Parse(csv_content, line_parser=None):
   line_parser = line_parser or line_parsers.FindLineParser(csv_content)
   csv_content = line_parser.StripNonCsvData(csv_content)
+  bank_name = line_parser.GetBankName()
   csv_mem_file = io.StringIO(csv_content)
   # dialect = csv.Sniffer().sniff(csv_content)
   dialect = 'excel'
@@ -36,7 +37,7 @@ def Parse(csv_content, line_parser=None):
   transactions = []
 
   for line_item in reader:
-    tran = line_parser.ParseLine(line_item)
+    tran = line_parser.ParseLine(line_item, bank_name)
     if tran:
       transactions.append(tran)
 

@@ -3,7 +3,7 @@
 import csv
 import datetime
 import re
-from flask import flash
+
 from flaskr import models
 
 
@@ -41,7 +41,10 @@ class AbstractLineParser(object):
   def StripNonCsvData(self, csv_content):
     return csv_content
 
-  def ParseLine(self, arr_or_dict):
+  def GetBankName(self):
+    pass
+
+  def ParseLine(self, arr_or_dict, bank):
     raise NotImplementedError()
 
 
@@ -52,13 +55,14 @@ class AbstractDirectExtractLineParser(AbstractLineParser):
   DESC_FIELD = ''
   TYPE_FIELD = ''  # optional
 
-  def ParseLine(self, line_dict):
+  def ParseLine(self, line_dict, name):
     date_str = line_dict[self.DATE_FIELD]
     date = datetime.datetime.strptime(date_str, self.DATE_FORMAT).date()
+    bank = name
     amount = float(line_dict[self.AMOUNT_FIELD])
     description = line_dict[self.DESC_FIELD]
     type = line_dict[self.TYPE_FIELD] if self.TYPE_FIELD else None
-    return models.Transaction(date, amount, description, type)
+    return models.Transaction(date, bank, amount, description, type)
 
 
 @RegisterLineParser
@@ -73,6 +77,9 @@ class AllyParser(AbstractDirectExtractLineParser):
   @classmethod
   def FirstLineFits(cls, first_line):
     return first_line == 'Date, Time, Amount, Type, Description'
+
+  def GetBankName(self):
+    return 'Ally'
 
 
 @RegisterLineParser
@@ -92,10 +99,13 @@ class BofaAccountParser(AbstractDirectExtractLineParser):
     parts = csv_content.split('\n\n')
     return parts[1]
 
-  def ParseLine(self, line_dict):
+  def GetBankName(self):
+    return 'BOFA'
+
+  def ParseLine(self, line_dict, name):
     if not line_dict['Amount']:
       return None
-    return super(BofaAccountParser, self).ParseLine(line_dict)
+    return super(BofaAccountParser, self).ParseLine(line_dict, name)
 
 
 @RegisterLineParser
@@ -110,6 +120,9 @@ class BofaCardParser(AbstractDirectExtractLineParser):
   def FirstLineFits(cls, first_line):
     return first_line == 'Posted Date,Reference Number,Payee,Address,Amount'
 
+  def GetBankName(self):
+    return 'BOFA'
+
 
 @RegisterLineParser
 class ChaseAccountParser(AbstractDirectExtractLineParser):
@@ -123,6 +136,9 @@ class ChaseAccountParser(AbstractDirectExtractLineParser):
   @classmethod
   def FirstLineFits(cls, first_line):
     return first_line == 'Type,Post Date,Description,Amount,Check or Slip #'
+
+  def GetBankName(self):
+    return 'Chase'
 
 
 @RegisterLineParser
@@ -141,6 +157,9 @@ class ChaseAccount2Parser(AbstractDirectExtractLineParser):
                           ('Details,Posting Date,Description,Amount,'
                            'Type,Balance,Check or Slip #')]
 
+  def GetBankName(self):
+    return 'Chase'
+
 
 @RegisterLineParser
 class ChaseCardParser(AbstractDirectExtractLineParser):
@@ -154,6 +173,9 @@ class ChaseCardParser(AbstractDirectExtractLineParser):
   @classmethod
   def FirstLineFits(cls, first_line):
     return first_line == 'Type,Trans Date,Post Date,Description,Amount'
+
+  def GetBankName(self):
+    return 'Chase'
 
 
 @RegisterLineParser
@@ -172,8 +194,11 @@ class DiscoverCardParser(AbstractDirectExtractLineParser):
   def StripNonCsvData(self, csv_content):
     return csv_content.replace('\t', '')
 
-  def ParseLine(self, line_dict):
-    tran = super(DiscoverCardParser, self).ParseLine(line_dict)
+  def GetBankName(self):
+    return 'Discover'
+
+  def ParseLine(self, line_dict, name):
+    tran = super(DiscoverCardParser, self).ParseLine(line_dict, name)
     return tran._replace(amount=-tran.amount)
 
 
@@ -195,7 +220,10 @@ class TargetCardParser(AbstractLineParser):
       return False
     return True
 
-  def ParseLine(self, line_parts):
+  def GetBankName(self):
+    return 'Target'
+
+  def ParseLine(self, line_parts, name):
     if not line_parts:
       return None
     date_str = line_parts[0]
@@ -203,7 +231,8 @@ class TargetCardParser(AbstractLineParser):
     description = line_parts[2]
     amount = float(line_parts[3])
     type = line_parts[4]
-    return models.Transaction(date, amount, description, type)
+    bank = name
+    return models.Transaction(date, bank, amount, description, type)
 
 
 @RegisterLineParser
@@ -225,12 +254,16 @@ class WellsFargoParser(AbstractLineParser):
       return False
     return True
 
-  def ParseLine(self, line_parts):
+  def GetBankName(self):
+    return 'WellsFargo'
+
+  def ParseLine(self, line_parts, name):
     if not line_parts:
       return None
     date_str = line_parts[0]
     date = datetime.datetime.strptime(date_str, '%m/%d/%Y').date()
     description = line_parts[4]
     amount = float(line_parts[1])
-    return models.Transaction(date, amount, description, None)
+    bank = name
+    return models.Transaction(date, bank, amount, description, None)
     
