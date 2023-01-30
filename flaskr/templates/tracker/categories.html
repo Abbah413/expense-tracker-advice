@@ -11,31 +11,44 @@
         <div class="row px-5 py-1" style="background-color: blueviolet;">
             <div class="col-auto my-3" style="background-color: rgb(255, 127, 157);">
                 <div class="input-group">
-                    <label class="input-group-text" for="sort">Sort By: </label>
-                    <select class="form-select" id="sort">
-                        <option selected disabled>Sort</option>
-                        <option value="1">Date</option>
-                        <option value="2">Amount</option>
-                        <option value="3">Type</option>
-                    </select>
+                    <button class="btn btn-primary" type="button" id="clear_sort">Clear</button>
+                    <div class="form-floating">
+                        <select class="form-select" id="sort">
+                            <option selected disabled>Sort</option>
+                            <option value="1">Date</option>
+                            <option value="2">Amount</option>
+                            <option value="3">Type</option>
+                        </select>
+                        <label for="sort">Sort By: </label>
+                    </div>
                 </div>
             </div>
             <div class="col-auto my-3" style="background-color: aqua;">
                 <div class="input-group">
-                    <label class="input-group-text" for="filter">Filter By: </label>
-                    <select class="form-select" id="filter">
-                        <option selected disabled>Filter</option>
-                        <option value="1">Date Range</option>
-                        <option value="2">Type</option>
-                        <option value="3">Recently Uploaded</option>
-                    </select>
+                    <button class="btn btn-primary" type="button" id="clear_filter">Clear</button>
+                    <div class="form-floating">
+                        <select class="form-select" id="filter">
+                            <option selected disabled>Filter</option>
+                            <option value="1">Date Range</option>
+                            <option value="2">Type</option>
+                            <option value="3">Recently Uploaded</option>
+                            <option value="4">Bank</option>
+                        </select>
+                        <label for="filter">Filter By: </label>
+                    </div>
                 </div>
+            </div>
+            <div class="col-auto my-3">
+                <button class="btn btn-primary" type="button" id="open_calender">
+                    <img src="static/assets/calendar3.svg" alt="Clear" width="32" height="32">
+                </button>
             </div>
         </div>
         <div class="px-5">
             <table class="table table-striped">
                 <thead style="background-color: beige;">
                     <tr>
+                        <th>Bank</th>
                         <th>Date</th>
                         <th>Amount</th>
                         <th>Description</th>
@@ -53,6 +66,7 @@
                 <tbody>
                     {% for row in output %}
                         <tr>
+                            <td>{{ row.bank }} </td>
                             <td>{{ row.transacted }}</td>
                             <td>{{ row.amount }}</td>
                             <td>{{ row.description }}</td>
@@ -65,5 +79,6 @@
     </form>
     <script src="{{url_for('static', filename='edit_type.js')}}"></script>
     <script src="{{url_for('static', filename='save_types.js')}}"></script>
+    <script src="{{url_for('static', filename='clear_filter.js')}}"></script>
 {% endblock %}
 
