@@ -282,3 +282,34 @@ document.addEventListener("change", (e) => {
                         <option value="1">Date</option>
                         <option value="2">Amount</option>
                         <option value="3">Type</option>
+
+
+            <button type="button" class="btn btn-outline-primary p-0  btn-sm" id="addcategory">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+
+            .bi-plus-lg {
+    font-size: 2rem; 
+    line-height: 2rem;
+}
+
+
+        <div class="col-auto" style="background-color: rgb(215, 121, 121);">
+            <button type="button" class="btn btn-outline-primary p-0 btn-sm" style="line-height: 16px" id="addcategory2">
+                <i class="bi bi-plus-square text-primary" style="font-size: 34px;"></i>
+            </button>
+
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline" id="addcategory3">
+                <i class="bi bi-plus-square text-primary"></i>
+            </button>
+
+        </div>
+
+
+            var x = document.getElementById("categorytable").rows;
+    let len = x.length;
+    x[len].insertCell(category)
+
+    console.log(x, len);
