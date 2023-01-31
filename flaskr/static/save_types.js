@@ -1,7 +1,7 @@
 document.addEventListener("change", (e) => {
     var type = e.target;
-    data = {id : type.dataset.id, type : type.value};
-    if (data['id']){
+    data = {transid : type.dataset.transid, category : type.value};
+    if (data['transid']){
         console.log(data)
         const categories_url = "/categories"
         fetch(categories_url, {

@@ -70,7 +70,8 @@
                             <td>{{ row.transacted }}</td>
                             <td>{{ row.amount }}</td>
                             <td>{{ row.description }}</td>
-                            <td><input class="form-control" type="text" name="type_input" placeholder="Type" data-id="{{ row.id }}" value="{{ row.category }}" readonly></td>
+                            <td><input class="form-control" type="text" name="type_input" placeholder="Type" 
+                                data-transid="{{ row.id }}" value="{{ row.category }}" readonly></td>
                         </tr>
                     {% endfor %}
                 </tbody>
