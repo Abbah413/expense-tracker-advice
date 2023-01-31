@@ -27,8 +27,11 @@ def allowed_file(filename):
 @bp.route('/')
 @login_required
 def index():
+    db = get_db()
 
-    return render_template('tracker/index.html')
+    categories = db.execute('SELECT * FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
+
+    return render_template('tracker/index.html', categories=categories)
 
 
 @bp.route('/import', methods=['GET', 'POST'])
@@ -69,8 +72,8 @@ def categories():
         # test variable
         print(JsonData)
         # add users category to corrisponding transaction
-        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (JsonData['category'], JsonData['transid'])).commit()
-
+        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (JsonData['category'], JsonData['transid']))
+        db.commit()
         # check for user category in categories table
         HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (JsonData['category'],session['user_id'])).fetchone()
         # if users category in categories
