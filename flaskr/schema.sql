@@ -16,15 +16,14 @@ CREATE TABLE transactions (
   uploaded DATETIME NOT NULL,
   amount DECIMAL NOT NULL,
   [description] TEXT NOT NULL,
-  category_id INTEGER,
+  category TEXT,
   user_id INTEGER,
-  FOREIGN KEY (category_id) REFERENCES categories (category_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 CREATE TABLE categories (
   category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  category TEXT
+  category TEXT,
   user_id INTEGER,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
