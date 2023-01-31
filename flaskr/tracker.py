@@ -19,6 +19,7 @@ ALLOWED_EXTENSIONS = set(['csv'])
 
 bp = Blueprint('tracker', __name__)
 
+# check if imported file is csv
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -41,8 +42,11 @@ def import_csv():
             FileLocation = os.path.join('flaskr/UPLOAD_FOLDER', new_filename)
             file.save(FileLocation)
 
+            # send the csv to the parser
             import_file(FileLocation)
+            # input parsed csv into transactions table
             format_output(FileLocation)
+            # delete the csv
             os.remove(FileLocation)
 
             return redirect(url_for('tracker.categories'))
@@ -54,15 +58,27 @@ def import_csv():
 @bp.route('/categories', methods=['GET', 'POST'])
 @login_required
 def categories():
+    # access the database
     db = get_db()
+    # select all the users transactions
     output = db.execute('SELECT * FROM transactions WHERE user_id= ?', (session['user_id'],)).fetchall()
-    #json_data = []
-    if request.method == 'POST':
-        json_data = request.get_json()
-        print(json_data)
-        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (json_data['type'], json_data['id']))
-        db.commit()
-        return {'response': 'received'}
 
+    if request.method == 'POST':
+        # get the category from users input in transaction form
+        JsonData = request.get_json()
+        # test variable
+        print(JsonData)
+        # add users category to corrisponding transaction
+        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (JsonData['category'], JsonData['transid'])).commit()
+
+        # check for user category in categories table
+        HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (JsonData['category'],session['user_id'])).fetchone()
+        # if users category in categories
+        if HasCategory:
+            return {'response': 'received'}
+        # else return category not in table
+        else:
+            return {'response': 'none'}
     else:
+        # output users transactions to the transaction form
         return render_template('tracker/categories.html', output=output)
