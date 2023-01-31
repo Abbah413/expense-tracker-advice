@@ -7,3 +7,19 @@ body {
     background-color: #d2f4ea;
 }
 
+
+#addlabel {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#addcategory {
+    border: none;
+    background: none;
+    padding: 0px;
+    line-height: 16px;
+}
+
+.bi-plus-square {
+    font-size: 2rem;
+}
