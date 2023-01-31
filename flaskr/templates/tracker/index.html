@@ -7,5 +7,46 @@
 {% endblock %}
 
 {% block main %}
+        <form id="summary_table" method="post"></form>
+            <div class="row mx-5 px-1 py-1" style="background-color: blueviolet;">
 
+                <div class="col-auto" style="background-color: white;">
+                    <button type="button" class="btn btn-outline-primary" onclick="addnew()" id="addcategory">
+                        <i class="bi bi-plus-square text-primary"></i>
+                    </button>
+                    <label class="text-primary" id="addlabel">Add Category</label>
+                </div>
+            </div>
+            <div class="px-5">
+                <table class="table table-hover" id="categorytable">
+                    <thead>
+                        <th class="row">
+                            <div class="col-auto me-auto">Category</div>
+                            <div class="col-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="can_edit">
+                                    <label class="form-check-label" for="can_edit">Edit</label>
+                                </div>
+                            </div>
+                        </th>
+                        <th>Budget</th>
+                        <th>Category Totals</th>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                        <tr id="tablerow">
+                            <td><input class="form-control" type="text" name="category_input" placeholder="Type" 
+                                data-transid="{{ category.category_id }}" value="{{ categories.category }}" readonly></td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+        
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
+    <script src="{{url_for('static', filename='add_category.js')}}"></script>
 {% endblock %}
