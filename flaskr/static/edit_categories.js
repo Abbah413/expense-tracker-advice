@@ -11,4 +11,4 @@ document.addEventListener("input", function(){
             x[i].readOnly = true;
         }
     }
-})
+});
