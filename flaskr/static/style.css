@@ -23,3 +23,7 @@ body {
 .bi-plus-square {
     font-size: 2rem;
 }
+
+.category_header {
+    width: 13%;
+}
