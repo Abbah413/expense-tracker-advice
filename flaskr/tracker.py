@@ -12,7 +12,7 @@ from datetime import datetime
 from flaskr.auth import login_required
 from flaskr.db import get_db
 from flaskr.parse_csv import import_file
-from flaskr.categories import format_output
+from flaskr.categories import format_output, category_totals
 
 
 ALLOWED_EXTENSIONS = set(['csv'])
@@ -24,14 +24,49 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/')
+@bp.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
     db = get_db()
+    CategoryTotals = []
+    cat_list = []
+    # get the users categories from the table
+    categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
+    # returns the totals for each category
+    for row in categories:
+        i = 0
+        cat_list[i] = row['category']
+        print(cat_list[i])
+        i+=1
+    CategoryTotals = category_totals(cat_list)
+    """
+    for row in categories:
+        CategoryTotals = category_totals(row['category'])
+    """
+    
+    if request.method == "POST":
+        # returns {category : 'value'}
+        JsonData = request.get_json()
+        print(JsonData)
+        # check if the category exists in the table for current user
+        HasCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
+                                     (JsonData['category'], session['user_id'])).fetchall()
+        # if the category is not in category table add it
+        if not HasCategory:
+            # add the new category to the table
+            db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
+            db.commit()
+            """CurrentCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
+                                        (JsonData['category'], session['user_id'])).fetchone()
+            """
+            total = category_totals(JsonData)
 
-    categories = db.execute('SELECT * FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
+            return {'category' : JsonData['category'], 'amount' : total['SUM(amount)']}
+        
+        else:
+            return {'response' : 'none'}
 
-    return render_template('tracker/index.html', categories=categories)
+    return render_template('tracker/index.html', categories=CategoryTotals)
 
 
 @bp.route('/import', methods=['GET', 'POST'])
@@ -52,15 +87,15 @@ def import_csv():
             # delete the csv
             os.remove(FileLocation)
 
-            return redirect(url_for('tracker.categories'))
+            return redirect(url_for('tracker.transactions'))
 
 
     else:
         return render_template('tracker/import.html')
 
-@bp.route('/categories', methods=['GET', 'POST'])
+@bp.route('/transactions', methods=['GET', 'POST'])
 @login_required
-def categories():
+def transactions():
     # access the database
     db = get_db()
     # select all the users transactions
@@ -84,4 +119,4 @@ def categories():
             return {'response': 'none'}
     else:
         # output users transactions to the transaction form
-        return render_template('tracker/categories.html', output=output)
+        return render_template('tracker/transactions.html', output=output)

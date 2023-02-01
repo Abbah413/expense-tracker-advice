@@ -21,6 +21,18 @@ def format_output(filename):
                 )
             db.commit()
 
+def category_totals(cat_list = []):
+    db = get_db()
+    totals = []
+    print(cat_list)
+    # iterates throught the list of categories
+    for item in cat_list:
+        print('Item: ', item)
+        total = db.execute('SELECT category, SUM(amount) FROM transactions WHERE category = ? AND user_id = ?', (item, session['user_id'])).fetchall()
+        for row in total:
+            print(row['category'], ' cat')
+            print(row['SUM(amount)'], 'sum')
+        return total
             
 
 
