@@ -3,8 +3,8 @@ document.addEventListener("change", (e) => {
     data = {transid : type.dataset.transid, category : type.value};
     if (data['transid']){
         console.log(data)
-        const categories_url = "/categories"
-        fetch(categories_url, {
+        const transactions_url = "/transactions"
+        fetch(transactions_url, {
             headers : {
                 'Content-Type' : 'application/json'
             },
