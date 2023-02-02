@@ -1,29 +1,21 @@
 document.addEventListener("change", (e) => {
-    var input = e.target;
-    data = {category : input.value};
+    let input = e.target;
+    DataTransfer = {action : 'add', category : input.value};
     if (input.type === "text"){
-        console.log(data)
         const index_url = "/"
         fetch(index_url, {
-            headers : {
-                'Content-Type' : 'application/json'
-            },
+            headers : {'Content-Type' : 'application/json'},
             method : 'POST',
             body : JSON.stringify(data)
         })
-        .then(function(response) {
-            if(response.ok) {
-                response.json()
-                .then(function(response) {
-                    console.log(response);
-                });
-            }
-            else {
-                throw Error('Something went wrong');
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Something went wrong');
             }
         })
+
         .catch(function(error) {
             console.log(error);
-        });
+        })
     }
 });
