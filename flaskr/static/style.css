@@ -25,5 +25,15 @@ body {
 }
 
 .category_header {
-    width: 13%;
+    width: 15%;
+}
+
+.remove_button {
+    border: none;
+    background: none;
+    padding-left: 0px;
+}
+
+.remove_button:hover {
+    color: red;
 }
