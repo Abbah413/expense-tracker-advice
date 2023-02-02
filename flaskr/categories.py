@@ -21,18 +21,49 @@ def format_output(filename):
                 )
             db.commit()
 
-def category_totals(cat_list = []):
+
+def category_totals(cat_list):
     db = get_db()
     totals = []
-    print(cat_list)
-    # iterates throught the list of categories
-    for item in cat_list:
-        print('Item: ', item)
-        total = db.execute('SELECT category, SUM(amount) FROM transactions WHERE category = ? AND user_id = ?', (item, session['user_id'])).fetchall()
+    if type(cat_list) == list:
+        # iterates throught the list of categories
+        for item in cat_list:
+            total = db.execute('SELECT category, ROUND(SUM(amount)) FROM transactions WHERE category = ? AND user_id = ?', (item['category'], session['user_id'])).fetchall()
+            for row in total:
+                if row['category'] == None:
+                    totals.append({'category' : item['category'], 'amount' : None})
+                else:
+                    totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount))']})
+        return totals
+    # else input is not a list
+    else:
+        total = db.execute('SELECT category, ROUND(SUM(amount)) FROM transactions WHERE category = ? AND user_id = ?', (cat_list['category'], session['user_id'])).fetchall()
         for row in total:
-            print(row['category'], ' cat')
-            print(row['SUM(amount)'], 'sum')
-        return total
-            
+            totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount))']})
+        return totals
 
 
+def is_capital(CategoryDict):
+    if type(CategoryDict) == dict:
+        for key, word in CategoryDict.items():
+            if word[0].islower():
+                CategoryDict[key] = word.capitalize()
+        return CategoryDict 
+    elif type(CategoryDict) == str:
+        CategoryDict = CategoryDict.capitalize()
+        return CategoryDict
+    elif type(CategoryDict) == list:
+        for i, word in CategoryDict:
+            CategoryDict[i] = word.capitalize
+        return CategoryDict
+    else:
+        return CategoryDict
+
+
+def has_category(category):
+    db = get_db()
+    HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (category,session['user_id'])).fetchone()
+    if HasCategory:
+        return True
+    else:
+        return False
