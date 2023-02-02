@@ -9,9 +9,6 @@
 {% block main %}
         <form id="summary_table" method="post"></form>
             <div class="row mx-5 px-1 py-1" style="background-color: blueviolet;">
-                <div class="col-auto">
-
-                </div>
                 <div class="col-auto" style="background-color: white;">
                     <button type="button" class="btn btn-outline-primary" onclick="addnew()" id="addcategory">
                         <i class="bi bi-plus-square text-primary"></i>
@@ -39,10 +36,15 @@
                     <tbody>
                         {% for row in categories %}
                         <tr>
-                            <td><input class="form-control" type="text" name="category_input" placeholder="Type" 
-                                data-catid="{{ row.category_id }}" value="{{ row.category }}" readonly></td>
+                            <td class="py-1">
+                                <div class="input-group py-0">
+                                    <button type="button" class="remove_button"><i class="bi bi-x-lg"></i></button>
+                                    <input class="form-control" type="text" name="category_input" placeholder="Type" 
+                                            value="{{ row.category }}" readonly>
+                                </div>
+                            </td>
                             <td style="background-color: rgb(94, 160, 160);">budget</td>
-                            <td style="background-color: rgb(168, 203, 101);">{{ row.amount }} </td>
+                            <td style="background-color: rgb(168, 203, 101);" class="{{ row.category }}">{{ row.amount }} </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -55,4 +57,5 @@
     <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
     <script src="{{url_for('static', filename='add_category.js')}}"></script>
     <script src="{{url_for('static', filename='save_categories.js')}}"></script>
+    <script src="{{url_for('static', filename='remove_category.js')}}"></script>
 {% endblock %}
