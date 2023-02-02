@@ -33,7 +33,6 @@ def load_summary():
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
     # returns the totals for each category
     CategoryTotals = category_totals(categories)
-    print(CategoryTotals)
 
     return render_template('tracker/index.html', categories=CategoryTotals)
 
