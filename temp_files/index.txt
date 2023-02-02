@@ -89,4 +89,14 @@ div.appendChild(input);
 td.appendChild(div);
 
 
+Summary Edit Button:
 
+<div class="row" style="background-color: rgb(56, 94, 81);">
+    <div class="col-auto" style="background-color: brown;">Category</div>
+    <div class="col-auto" style="background-color: rgb(95, 95, 200);">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="can_edit">
+            <label class="form-check-label" for="can_edit">Edit</label>
+        </div>
+    </div>
+</div>
