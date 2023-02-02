@@ -47,3 +47,46 @@
         </form>
     <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
     <script src="{{url_for('static', filename='add_category.js')}}"></script>
+
+
+                                <td>
+                                <div class="row row-col">
+                                    <div class="col-1 p-0">
+                                        <button type="button" class="btn btn-primary"><i class="bi bi-x-lg"></i></button>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="text" name="category_input" placeholder="Type" 
+                                                data-catid="{{ row.category_id }}" value="{{ row.category }}" readonly>
+                                    </div>
+                                </div>
+                            </td>
+
+
+
+
+const td = document.createElement("td");
+td.className = "py-1";
+
+const div = document.createElement("div");
+div.className = "input-group py-0";
+
+const button = document.createElement("button");
+button.type = "button";
+button.id = "remove_button";
+button.innerHTML = '<i class="bi bi-x-lg"></i>';
+
+const input = document.createElement("input");
+input.className = "form-control";
+input.type = "text";
+input.name = "category_input";
+input.placeholder = "Type";
+input.value = "{{ row.category }}";
+input.readOnly = true;
+input.dataset.catid = "{{ row.category_id }}";
+
+div.appendChild(button);
+div.appendChild(input);
+td.appendChild(div);
+
+
+
