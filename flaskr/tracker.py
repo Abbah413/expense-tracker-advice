@@ -12,7 +12,7 @@ from datetime import datetime
 from flaskr.auth import login_required
 from flaskr.db import get_db
 from flaskr.parse_csv import import_file
-from flaskr.categories import format_output, category_totals
+from flaskr.categories import format_output, category_totals, is_capital,has_category
 
 
 ALLOWED_EXTENSIONS = set(['csv'])
@@ -29,42 +29,40 @@ def allowed_file(filename):
 def index():
     db = get_db()
     CategoryTotals = []
-    cat_list = []
     # get the users categories from the table
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
     # returns the totals for each category
-    for row in categories:
-        i = 0
-        cat_list[i] = row['category']
-        print(cat_list[i])
-        i+=1
-    CategoryTotals = category_totals(cat_list)
-    """
-    for row in categories:
-        CategoryTotals = category_totals(row['category'])
-    """
+    CategoryTotals = category_totals(categories)
+    print(CategoryTotals)
     
     if request.method == "POST":
         # returns {category : 'value'}
         JsonData = request.get_json()
-        print(JsonData)
-        # check if the category exists in the table for current user
-        HasCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
-                                     (JsonData['category'], session['user_id'])).fetchall()
-        # if the category is not in category table add it
-        if not HasCategory:
-            # add the new category to the table
-            db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
+        if JsonData['action'] == 'add':
+            JsonData = is_capital(JsonData)
+            # check if the category exists in the table for current user
+            HasCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
+                                        (JsonData['category'], session['user_id'])).fetchall()
+            # if the category is not in category table add it
+            if not HasCategory:
+                # add the new category to the table
+                db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
+                db.commit()
+                # returns the category totals
+                total = category_totals(JsonData)
+                # sets the format to return the totals then returns them
+                SendJson = {'respnse' : 'saved'}
+                #{'category' : JsonData['category'], 'amount' : total['SUM(amount)']}
+                return SendJson
+            else:
+                return {'response' : 'none'}
+        if JsonData['action'] == 'remove':
+            db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (JsonData['category'], session['user_id']))
             db.commit()
-            """CurrentCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
-                                        (JsonData['category'], session['user_id'])).fetchone()
-            """
-            total = category_totals(JsonData)
-
-            return {'category' : JsonData['category'], 'amount' : total['SUM(amount)']}
-        
-        else:
-            return {'response' : 'none'}
+            if not has_category:
+                return {'response' : 'removed'}
+            else:
+                return {'response' : 'none'}
 
     return render_template('tracker/index.html', categories=CategoryTotals)
 
@@ -79,7 +77,6 @@ def import_csv():
             new_filename = f'{filename.split(".")[0]}_{str(datetime.now())}.csv'
             FileLocation = os.path.join('flaskr/UPLOAD_FOLDER', new_filename)
             file.save(FileLocation)
-
             # send the csv to the parser
             import_file(FileLocation)
             # input parsed csv into transactions table
@@ -88,8 +85,6 @@ def import_csv():
             os.remove(FileLocation)
 
             return redirect(url_for('tracker.transactions'))
-
-
     else:
         return render_template('tracker/import.html')
 
@@ -104,15 +99,13 @@ def transactions():
     if request.method == 'POST':
         # get the category from users input in transaction form
         JsonData = request.get_json()
-        # test variable
-        print(JsonData)
+        JsonData = is_capital(JsonData)
         # add users category to corrisponding transaction
         db.execute('UPDATE transactions SET category = ? WHERE id = ?', (JsonData['category'], JsonData['transid']))
         db.commit()
         # check for user category in categories table
-        HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (JsonData['category'],session['user_id'])).fetchone()
         # if users category in categories
-        if HasCategory:
+        if has_category(JsonData['category']):
             return {'response': 'received'}
         # else return category not in table
         else:
