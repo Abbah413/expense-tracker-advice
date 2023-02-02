@@ -27,19 +27,36 @@
                     {% for row in categories %}
                     <tr>
                         <td class="py-1">
-                            <div class="input-group py-0">
+                            <div class="input-group pt-1">
                                 <button type="button" class="remove_button"><i class="bi bi-x-lg"></i></button>
-                                <input class="form-control" type="text" name="category_input" placeholder="Type" 
-                                        value="{{ row.category }}" readonly>
+                                <input class="form-control" type="text" value="{{ row.category }}" readonly>
                             </div>
                         </td>
-                        <td style="background-color: rgb(94, 160, 160);">budget</td>
-                        <td style="background-color: rgb(168, 203, 101);" class="{{ row.category }}">{{ row.amount }} </td>
+                        <td class=""><input class="form-control" type="number" placeholder="Budget" value="{{ row.budget }}"></td>
+                        <td class="amount">{{ row.amount }} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
-    
+                    <tr class="totals">
+                        <th>Totals:</th>
+                        <td class="b-total"></td>
+                        <td class="c-total"></td>
+                    </tr>
+                    <tr class="savings">
+                        <th>Savings:</th>
+                        <td class="b-savings"></td>
+                        <td class="t-savings"></td>
+                    </tr>
+                    <tr class="income">
+                        <th>Income:</th>
+                        <td></td>
+                        <td class="t-income"></td>
+                    </tr>
+                    <tr class="net">
+                        <th>Net:</th>
+
+                    </tr>
                 </tfoot>
             </table>
         </div>
