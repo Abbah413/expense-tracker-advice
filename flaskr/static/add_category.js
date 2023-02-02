@@ -3,8 +3,7 @@ function addnew() {
     var tbody = table.getElementsByTagName("tbody")[0];
     var row = tbody.insertRow();
     createCategory(row);
-    var cell2 = row.insertCell();
-        cell2.innerHTML = 'budget'
+    createBudget(row)
     var cell3 = row.insertCell();
 }
 
@@ -25,7 +24,6 @@ function inputAttributes(){
     const attributeDict = {
         type : "text",
         class : "form-control",
-        name : "category_input",
         placeholder : "Category",
    };
    const input = document.createElement("INPUT");
@@ -48,4 +46,18 @@ function buttonAttributes(){
     icon.setAttribute("class", "bi bi-x-lg");
     button.appendChild(icon);
     return button;
+}
+
+function createBudget(row){
+    const attributeDict = {
+        type : "number",
+        class : "form-control",
+        placeholder : "Budget",
+    };
+    const input = document.createElement("INPUT");
+    for (const key in attributeDict){
+        input.setAttribute(key, attributeDict[key]);
+   }
+   var cell2 = row.insertCell();
+   cell2.appendChild(input);
 }
