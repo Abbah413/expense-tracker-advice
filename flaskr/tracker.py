@@ -24,9 +24,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/')
 @login_required
-def index():
+def load_summary():
     db = get_db()
     CategoryTotals = []
     # get the users categories from the table
@@ -34,37 +34,36 @@ def index():
     # returns the totals for each category
     CategoryTotals = category_totals(categories)
     print(CategoryTotals)
-    
-    if request.method == "POST":
-        # returns {category : 'value'}
-        JsonData = request.get_json()
-        if JsonData['action'] == 'add':
-            JsonData = is_capital(JsonData)
-            # check if the category exists in the table for current user
-            HasCategory = db.execute('SELECT category_id FROM categories Where category = ? AND user_id = ?',
-                                        (JsonData['category'], session['user_id'])).fetchall()
-            # if the category is not in category table add it
-            if not HasCategory:
-                # add the new category to the table
-                db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
-                db.commit()
-                # returns the category totals
-                total = category_totals(JsonData)
-                # sets the format to return the totals then returns them
-                SendJson = {'respnse' : 'saved'}
-                #{'category' : JsonData['category'], 'amount' : total['SUM(amount)']}
-                return SendJson
-            else:
-                return {'response' : 'none'}
-        if JsonData['action'] == 'remove':
-            db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (JsonData['category'], session['user_id']))
-            db.commit()
-            if not has_category:
-                return {'response' : 'removed'}
-            else:
-                return {'response' : 'none'}
 
     return render_template('tracker/index.html', categories=CategoryTotals)
+
+@bp.route('/', methods=['POST'])
+@login_required
+def append_summary():
+    db = get_db()
+    # returns {category : 'value'}
+    JsonData = request.get_json()
+    if JsonData['action'] == 'add':
+        JsonData = is_capital(JsonData)        
+        # if the category is not in category table add it
+        if not has_category(JsonData['category']):
+            # add the new category to the table
+            db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
+            db.commit()
+            # returns the category totals
+            total = category_totals(JsonData)
+            # sets the format to return the totals then returns them
+            SendJson = {'category' : JsonData['category'], 'amount' : total[0]['amount']}
+            return SendJson
+        else:
+            return {'response' : 'none'}
+    if JsonData['action'] == 'remove':
+        db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (JsonData['category'], session['user_id']))
+        db.commit()
+        if not has_category(JsonData['category']):
+            return {'response' : 'removed'}
+        else:
+            return {'response' : 'none'}
 
 
 @bp.route('/import', methods=['GET', 'POST'])
