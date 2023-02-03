@@ -28,12 +28,20 @@ def category_totals(cat_list):
     if type(cat_list) == list:
         # iterates throught the list of categories
         for item in cat_list:
-            total = db.execute('SELECT category, ROUND(SUM(amount)) FROM transactions WHERE category = ? AND user_id = ?', (item['category'], session['user_id'])).fetchall()
+            total = db.execute('SELECT transactions.category, ROUND(SUM(amount)), categories.budget \
+                                FROM transactions \
+                                JOIN categories ON transactions.category = categories.category \
+                                WHERE transactions.category = ? AND transactions.user_id = ?',
+                                (item['category'], session['user_id'])
+                                ).fetchall()
+                                
             for row in total:
                 if row['category'] == None:
                     totals.append({'category' : item['category'], 'amount' : None})
-                else:
+                if row['budget'] == None:
                     totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount))']})
+                else:
+                    totals.append({'category' : row['category'], 'budget' : row['budget'], 'amount' : row['ROUND(SUM(amount))']})
         return totals
     # else input is not a list
     else:
@@ -67,3 +75,18 @@ def has_category(category):
         return True
     else:
         return False
+
+
+    """
+        SELECT transactions.amount, categories.budget, categories.category
+        FROM transactions 
+        LEFT JOIN transactions
+        ON transactions.category = categories.category
+        WHERE category = "Gasoline" AND user_id = 1
+
+        SELECT transactions.category, ROUND(SUM(transactions.amount)), categories.budget
+        FROM transactions
+        JOIN categories ON transactions.category = categories.category
+        WHERE transactions.category = "Gasoline" AND transactions.user_id = 1
+        GROUP BY transactions.category;
+    """
