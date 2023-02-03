@@ -59,5 +59,6 @@ function createBudget(row){
         input.setAttribute(key, attributeDict[key]);
    }
    var cell2 = row.insertCell();
+   cell2.setAttribute("class", "budget");
    cell2.appendChild(input);
 }
