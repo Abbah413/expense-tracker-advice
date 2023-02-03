@@ -23,6 +23,41 @@ document.addEventListener("change", (e) => {
     }
 });
 
+document.addEventListener("change", (e) => {
+    // budget input
+    let input = e.target;
+    if (input.type === "number"){
+        let td = input.parentNode;
+        console.log(td);
+        let cat_td = td.previousSibling.previousSibling;
+        console.log(cat_td);
+        let div = cat_td.childNodes[1];
+        console.log(div);
+        let category = div.childNodes[3];
+        console.log(category)
+        let data = {action : 'budget', category : category.value, budget : input.value};
+        console.log(data);
+        const index_url = "/"
+        fetch(index_url, {
+            headers : {'Content-Type' : 'application/json'},
+            method : 'POST',
+            body : JSON.stringify(data)
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Something went wrong');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+    }
+});
+
 function append_table(input, data){
     input.value = data['category'];
     input.readOnly = true;
