@@ -2,13 +2,15 @@ document.addEventListener('click', e => {
     // gets the element that triggered the event listener
     let target = e.target;
     let parent = target.parentElement
-    // if the element is the remove button
-    if (parent.classList.contains("remove_button")) {
-        // stores the category of the clicked row
-        let category = parent.nextElementSibling.value
-        let data = {action : 'remove', category : category};
-        send_data(data);
-        remove_element(parent);
+    if (parent.type === "button"){
+        // if the element is the remove button
+        if (parent.classList.contains("remove_button")) {
+            // stores the category of the clicked row
+            let category = parent.nextElementSibling.value
+            let data = {action : 'remove', category : category};
+            send_data(data);
+            remove_element(parent);
+        }
     }
 });
 
