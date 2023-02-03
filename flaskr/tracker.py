@@ -26,7 +26,7 @@ def allowed_file(filename):
 
 @bp.route('/')
 @login_required
-def load_summary():
+def index():
     db = get_db()
     CategoryTotals = []
     # get the users categories from the table
@@ -55,14 +55,24 @@ def append_summary():
             SendJson = {'category' : JsonData['category'], 'amount' : total[0]['amount']}
             return SendJson
         else:
-            return {'response' : 'none'}
+            return {'response' : None}
+
     if JsonData['action'] == 'remove':
         db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (JsonData['category'], session['user_id']))
         db.commit()
         if not has_category(JsonData['category']):
             return {'response' : 'removed'}
         else:
-            return {'response' : 'none'}
+            return {'response' : None}
+
+    if JsonData['action'] == 'budget' and has_category(JsonData['category']):
+        print(JsonData['budget'])
+        db.execute('UPDATE categories SET budget = ? WHERE category = ? AND user_id = ?', ((JsonData['budget']), JsonData['category'], session['user_id']))
+        db.commit()
+        return {'response' : 'added'}
+    else:
+        return {'response' : None}
+
 
 
 @bp.route('/import', methods=['GET', 'POST'])
@@ -107,7 +117,7 @@ def transactions():
             return {'response': 'received'}
         # else return category not in table
         else:
-            return {'response': 'none'}
+            return {'response': None}
     else:
         # output users transactions to the transaction form
         return render_template('tracker/transactions.html', output=output)
