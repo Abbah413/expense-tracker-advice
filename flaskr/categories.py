@@ -28,7 +28,7 @@ def category_totals(cat_list):
     if type(cat_list) == list:
         # iterates throught the list of categories
         for item in cat_list:
-            total = db.execute('SELECT transactions.category, ROUND(SUM(amount)), categories.budget \
+            total = db.execute('SELECT transactions.category, ROUND(SUM(amount), 2), ROUND(categories.budget, 2) \
                                 FROM transactions \
                                 JOIN categories ON transactions.category = categories.category \
                                 WHERE transactions.category = ? AND transactions.user_id = ?',
@@ -38,16 +38,16 @@ def category_totals(cat_list):
             for row in total:
                 if row['category'] == None:
                     totals.append({'category' : item['category'], 'amount' : None})
-                if row['budget'] == None:
-                    totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount))']})
+                if row['ROUND(categories.budget, 2)'] == None:
+                    totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount), 2)']})
                 else:
-                    totals.append({'category' : row['category'], 'budget' : row['budget'], 'amount' : row['ROUND(SUM(amount))']})
+                    totals.append({'category' : row['category'], 'budget' : row['ROUND(categories.budget, 2)'], 'amount' : row['ROUND(SUM(amount), 2)']})
         return totals
     # else input is not a list
     else:
-        total = db.execute('SELECT category, ROUND(SUM(amount)) FROM transactions WHERE category = ? AND user_id = ?', (cat_list['category'], session['user_id'])).fetchall()
+        total = db.execute('SELECT category, ROUND(SUM(amount), 2) FROM transactions WHERE category = ? AND user_id = ?', (cat_list['category'], session['user_id'])).fetchall()
         for row in total:
-            totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount))']})
+            totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount), 2)']})
         return totals
 
 
