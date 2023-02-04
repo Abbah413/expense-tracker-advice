@@ -1,0 +1,27 @@
+// update the totals
+document.addEventListener('DOMContentLoaded', update());
+function update() {
+  // get the budget and amount totals
+  let budgets = document.getElementsByClassName('budget');
+  let amounts = document.getElementsByClassName('amount');
+  // initialize the totals
+  var btotal = 0;
+  var atotal = 0;
+  // get the sum of the budgets
+  for (var budget of budgets) {
+    var b = budget.childNodes[0].value;
+    if (b.length > 0){
+      btotal = btotal + parseFloat(b);
+    }
+  }
+  // get the sum of absolute value of the amounts
+  for (var amount of amounts) {
+    var a = amount.innerHTML.replace(/\$/g, '');
+    atotal = atotal + Math.abs(parseFloat(a));
+  }
+  // format the totals then update them
+  let total1 = document.getElementsByClassName('b-total');
+  total1[0].innerHTML = '$' + btotal.toFixed(2);
+  let total2 = document.getElementsByClassName('a-total');
+  total2[0].innerHTML = '$' + atotal.toFixed(2);
+}
