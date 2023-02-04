@@ -33,7 +33,6 @@ def index():
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
     # returns the totals for each category
     CategoryTotals = category_totals(categories)
-
     return render_template('tracker/index.html', categories=CategoryTotals)
 
 @bp.route('/', methods=['POST'])
