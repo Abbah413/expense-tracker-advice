@@ -14,11 +14,10 @@
                     <button class="btn btn-primary" type="button" id="clear_sort">Clear</button>
                     <div class="form-floating">
                         <select class="form-select" id="sort">
-                            <option selected disabled>Sort</option>
+                            <option selected disabled>Upload Date</option>
                             <option value="1">Transaction Date</option>
                             <option value="2">Amount</option>
                             <option value="3">Type</option>
-                            <option value="4">Upload Date</option>
                         </select>
                         <label for="sort">Sort By: </label>
                     </div>
@@ -67,11 +66,11 @@
                 <tbody>
                     {% for row in output %}
                         <tr>
-                            <td>{{ row.bank }} </td>
-                            <td>{{ row.transacted }}</td>
-                            <td>{{ row.amount }}</td>
+                            <td class="bank">{{ row.bank }} </td>
+                            <td class="trans-date" data-date="{{row.uploaded}}">{{ row.transacted }}</td>
+                            <td class="amount">{{ row.amount }}</td>
                             <td>{{ row.description }}</td>
-                            <td><input class="form-control" type="text" name="type_input" placeholder="Type" 
+                            <td class="category"><input class="form-control" type="text" name="type_input" placeholder="Type" 
                                 data-transid="{{ row.id }}" value="{{ row.category }}" readonly></td>
                         </tr>
                     {% endfor %}
