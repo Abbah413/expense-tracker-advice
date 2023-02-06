@@ -104,3 +104,103 @@ def register():
             return redirect("/")
     else:
         return render_template("register.html")
+
+
+AMOUNT SORT FUNCTION:
+
+function sortTable() {
+    let table = document.getElementById('transaction-table');
+    let rows = table.getElementsByTagName('tr');
+    let row1;
+    let row2;
+    let x;
+    let y;
+    let temp = rows[1]
+    let sorted = [];
+    // loop through array until it is sorted
+    for (let i = 1; i < (rows.length); i++) {
+        // for each time throught array
+        for (let i = 1; i < (rows.lenght); i++) {     
+            // get the TD element for temp and rows[i + 1]
+            row1 = rows[i].getElementsByClassName('amount').innerHTML;
+            row2 = rows[i + 1].getElementsByClassName('amount').innerHTML;
+            // Get the values for the rows
+            x = Math.abs(parseFloat(row1[0]));
+            y = Math.abs(parseFloat(row2[0]));
+            // If temp is less than rows[i + 1]
+            if (x > y) {
+                // Set temp to the lesser row
+                temp = rows[i + 1]
+            }
+        }
+    }
+}
+
+
+
+        let temp1 = rowsArr[xp];
+        let temp2 = rowsArr[yp];
+        rowsArr.splice(xp, 1, temp2);
+        rowsArr.splice(yp, 1, temp1);
+
+
+
+
+AMOUNTSORT BROKEN:
+
+function amountSort(){
+    // access the table to bet the rows
+    let table = document.getElementById('transaction-table');
+    let rowsArr = table.rows;
+    // get the number of rows in a the table
+    let n = rowsArr.length;
+    //console.log(n);
+    selectionSort(rowsArr, n)
+    printTable(table, rowsArr, n)
+    
+    function selectionSort(rowsArr,  n)
+    {
+        let minIdx;
+        let row1;
+        let row2;
+        let x;
+        let y;
+        // One by one move boundary of unsorted subarray
+        for (let i = 1; i < n-1; i++)
+        {
+            // Find the minimum element in unsorted array
+            minIdx = i;
+            for (let j = i + 1; j < n; j++){
+                // get the amount value for rows[i] and rows[i + 1]
+                row1 = rowsArr[minIdx].childNodes[5].innerHTML;
+                row2 = rowsArr[j].childNodes[5].innerHTML;
+                //console.log(row1 + row2);
+                // make sure amount is positive
+                x = Math.abs(parseFloat(row1));
+                y = Math.abs(parseFloat(row2));
+                //console.log('row1: ', x, 'row2: ', y)
+                if (y < x){
+                    minIdx = j;
+                }
+            }
+            
+            // Swap the found minimum element with the first element
+            swap(rowsArr,minIdx, i);
+        }
+    }
+    
+    function swap(rowsArr ,xp, yp)
+    {
+        let temp1 = rowsArr[xp];
+        let temp2 = rowsArr[yp];
+        rowsArr.splice(xp, 1, temp2);
+        rowsArr.splice(yp, 1, temp1);
+    }
+
+    function printTable(table, rowsArr,n){
+        for (let i = 1; i < n; i++){
+            console.log(rowsArr[i]);
+            table.rows[i] = rowsArr[i];
+        }
+    }
+}
