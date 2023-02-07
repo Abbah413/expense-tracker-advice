@@ -1,3 +1,4 @@
+
 // Listens for the sort or filter buttons to be clicked
 document.addEventListener("click", (e) => {
     // If the clear filter button is clicked, reset the filter select
@@ -27,6 +28,9 @@ document.addEventListener("change", (e) => {
         if (select.selectedIndex == 1){
             transDateSort();
         }
+        if (select.selectedIndex == 3){
+            categorySort();
+        }
     }
 });
 
@@ -45,9 +49,9 @@ function amountSort(){
     let row1;
     let row2;
     let i, x, y;
+    rows = table.rows;
     while (switching){
         switching = false;
-        rows = table.rows;
         for (i = 1; i < (rows.length - 1); i++){
             shouldSwitch = false;
             // get the amount value for rows[i] and rows[i + 1]
@@ -73,9 +77,9 @@ function uploadDateSort(){
     let rows;
     let switching = true;
     let i, x, y;
+    rows = table.rows;
     while (switching){
         switching = false;
-        rows = table.rows;
         for (i = 1; i < (rows.length - 1); i++){
             shouldSwitch = false;
             // get the upload date and convert it to a Date object
@@ -88,10 +92,8 @@ function uploadDateSort(){
             }
         }
         if (shouldSwitch) {
-            if ((i + 1) < rows.length){
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
         }
     }
 }
@@ -101,9 +103,9 @@ function transDateSort(){
     let rows;
     let switching = true;
     let i, x, y;
+    rows = table.rows;
     while (switching){
         switching = false;
-        rows = table.rows;
         for (i = 1; i < (rows.length - 1); i++){
             shouldSwitch = false;
             // get the transaction date and convert it to a Date object
@@ -116,38 +118,42 @@ function transDateSort(){
             }
         }
         if (shouldSwitch) {
-            if ((i + 1) < rows.length){
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
         }
     }
 }
 
 function categorySort(){
     let table = document.getElementById('transaction-table');
-    let rows;
-    let switching = true;
-    let i, x, y;
-    for (let j = 0; j <  : j++)
-    while (switching){
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++){
-            shouldSwitch = false;
-            // get the transaction date and convert it to a Date object
-            x = rows[i].childNodes[9].innerHTML;
-            y = rows[i + 1].childNodes[9].innerHTML;
-            // if row[i] date is greater than row[i + 1] date, switch them
-            if (x > y){
-                shouldSwitch = true;
-                break;
-            }
+    let rows = table.rows;
+    let i = 1, k, x;
+    let categories = [];
+    for (let j = 1; j < rows.length; j++){
+        let current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        if (!categories.includes(current)){
+            categories.push(current);
         }
-        if (shouldSwitch) {
-            if ((i + 1) < rows.length){
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
+    }
+    // for each category in categories
+    for (k = 0; k < categories.length; k++){
+        // keeps track of where to place the current row
+        let hasCategory = 1;
+        // loops throught the table until it is sorted, does not stop until i = n-1
+        for (let counter = 0; i < rows.length; counter++){
+            // get the current category to sort
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            // if category in categories add it before last element with categories[k]
+            if (x == categories[k]){
+                rows[i].parentNode.insertBefore(rows[i], rows[hasCategory]);
+                // increments hascategory to insert next row into correct position
+                hasCategory++;
+                i++
+            }
+            // add row to end of table
+            rows[i].parentNode.insertBefore(rows[i], null);
+            if (counter > rows.length){
+                break;
             }
         }
     }
