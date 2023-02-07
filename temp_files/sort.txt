@@ -1,0 +1,82 @@
+CATEGORY SORT OLD:
+
+function categorySort(){
+    let table = document.getElementById('transaction-table');
+    let rows;
+    let i = 1, k, x;
+    let categories = [];
+    let current;
+    // keeps track of where to place the current row
+    let hasCategory = 1;// = 1 which is 0 fr tbody
+    rows = table.rows;
+    let n = rows.length;
+    for (let j = 1; j < n; j++){
+        current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        if (!categories.includes(current)){
+            categories.push(current);
+        }
+    }
+    console.log(categories)
+    // for each category in categories
+    for (k = 0; k < (categories.length - 1); k++){
+        //reset the counters
+        hasCategory = 1;
+        // loops throught the table until it is sorted, does not stop until i = n-1
+        for (let counter = 0; i < (n - 1); counter++){
+            // get the current category to sort
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            // if category in categories add it before last element with categories[k]
+            if (x == categories[k]){
+                rows[i].parentNode.insertBefore(rows[i], rows[hasCategory]);
+                // increments hascategory to insert next row into correct position
+                hasCategory++;
+                // 
+                i++;
+            }
+            // add row to end of table
+            else{
+                rows[i].parentNode.insertBefore(rows[i], null);
+            }
+            if (counter > n){
+                break;
+            }
+        }
+    }
+}
+
+CATEGORY SORT NEW:
+
+function categorySort(){
+    let table = document.getElementById('transaction-table');
+    let rows = table.rows;
+    let i = 1, k, x;
+    let categories = [];
+    for (let j = 1; j < rows.length; j++){
+        let current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        if (!categories.includes(current)){
+            categories.push(current);
+        }
+    }
+    // for each category in categories
+    for (k = 0; k < categories.length; k++){
+        // keeps track of where to place the current row
+        let hasCategory = 1;
+        // loops throught the table until it is sorted, does not stop until i = n-1
+        for (let counter = 0; i < rows.length; counter++){
+            // get the current category to sort
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            // if category in categories add it before last element with categories[k]
+            if (x == categories[k]){
+                rows[i].parentNode.insertBefore(rows[i], rows[hasCategory]);
+                // increments hascategory to insert next row into correct position
+                hasCategory++;
+                i++
+            }
+            // add row to end of table
+            rows[i].parentNode.insertBefore(rows[i], null);
+            if (counter > rows.length){
+                break;
+            }
+        }
+    }
+}
