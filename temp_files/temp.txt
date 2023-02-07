@@ -204,3 +204,42 @@ function amountSort(){
         }
     }
 }
+
+
+CATEGORIES SORT:
+
+function categorySort(){
+    let table = document.getElementById('transaction-table');
+    let rows;
+    let switching = true;
+    let i, x, y;
+    let categories = [];
+    let current;
+    rows = table.rows;
+    for (let j = 1; j < rows.length; j++){
+        current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        console.log(current)
+        if (!categories.includes(current)){
+            categories.push(current);
+        }
+    }
+    console.log(categories)
+    while (switching){
+        switching = false;
+        for (i = 1; i < (rows.length - 1); i++){
+            shouldSwitch = false;
+            // get the transaction date and convert it to a Date object
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            y = rows[i + 1].childNodes[9].lastChild.value.toLowerCase();
+            // if row[i] date is greater than row[i + 1] date, switch them
+            if (x == categories[i]){
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}

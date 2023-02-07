@@ -1,0 +1,273 @@
+document.addEventListener('click', (e) => {
+    let btn = e.target;
+    if (btn.id == 'calender_button'){
+        let test = document.getElementsByClassName('dropdown-menu d-none p-2 shadow rounded-3 w-340px')
+        console.log(test.attributes)
+    }
+})
+
+<div class="col-auto my-3" style="background-color: aqua;">
+                <div class="input-group">
+                    <button class="btn btn-primary" type="button" id="clear_filter">Clear</button>
+                    <div class="form-floating">
+                        <select class="form-select" id="filter">
+                            <option selected disabled>Filter</option>
+                            <option value="1">Date Range</option>
+                            <option value="2">Type</option>
+                            <option value="3">Recently Uploaded</option>
+                            <option value="4">Bank</option>
+                        </select>
+                        <label for="filter">Filter By: </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto my-3">
+                <button class="btn btn-primary dropdwon-toggle" type="button" id="open_calender" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="static/assets/calendar3.svg" alt="Clear" width="32" height="32">
+                </button>
+                <div class="dropdown-menu d-none p-2 shadow rounded-3 w-340px">
+                    <div class="d-grid gap-1">
+                      <div class="cal">
+                        <div class="cal-month">
+                          <button class="btn cal-btn" type="button">
+                            <i class="bi bi-arrow-left-short"></i>
+                          </button>
+                          <strong class="cal-month-name">June</strong>
+                          <select class="form-select cal-month-name d-none">
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option selected value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                          </select>
+                          <button class="btn cal-btn" type="button">
+                            <i class="bi bi-arrow-right-short"></i>
+                          </button>
+                        </div>
+                        <div class="cal-weekdays text-muted">
+                          <div class="cal-weekday">Sun</div>
+                          <div class="cal-weekday">Mon</div>
+                          <div class="cal-weekday">Tue</div>
+                          <div class="cal-weekday">Wed</div>
+                          <div class="cal-weekday">Thu</div>
+                          <div class="cal-weekday">Fri</div>
+                          <div class="cal-weekday">Sat</div>
+                        </div>
+                        <div class="cal-days">
+                          <button class="btn cal-btn" disabled type="button">30</button>
+                          <button class="btn cal-btn" disabled type="button">31</button>
+                  
+                          <button class="btn cal-btn" type="button">1</button>
+                          <button class="btn cal-btn" type="button">2</button>
+                          <button class="btn cal-btn" type="button">3</button>
+                          <button class="btn cal-btn" type="button">4</button>
+                          <button class="btn cal-btn" type="button">5</button>
+                          <button class="btn cal-btn" type="button">6</button>
+                          <button class="btn cal-btn" type="button">7</button>
+                  
+                          <button class="btn cal-btn" type="button">8</button>
+                          <button class="btn cal-btn" type="button">9</button>
+                          <button class="btn cal-btn" type="button">10</button>
+                          <button class="btn cal-btn" type="button">11</button>
+                          <button class="btn cal-btn" type="button">12</button>
+                          <button class="btn cal-btn" type="button">13</button>
+                          <button class="btn cal-btn" type="button">14</button>
+                  
+                          <button class="btn cal-btn" type="button">15</button>
+                          <button class="btn cal-btn" type="button">16</button>
+                          <button class="btn cal-btn" type="button">17</button>
+                          <button class="btn cal-btn" type="button">18</button>
+                          <button class="btn cal-btn" type="button">19</button>
+                          <button class="btn cal-btn" type="button">20</button>
+                          <button class="btn cal-btn" type="button">21</button>
+                  
+                          <button class="btn cal-btn" type="button">22</button>
+                          <button class="btn cal-btn" type="button">23</button>
+                          <button class="btn cal-btn" type="button">24</button>
+                          <button class="btn cal-btn" type="button">25</button>
+                          <button class="btn cal-btn" type="button">26</button>
+                          <button class="btn cal-btn" type="button">27</button>
+                          <button class="btn cal-btn" type="button">28</button>
+                  
+                          <button class="btn cal-btn" type="button">29</button>
+                          <button class="btn cal-btn" type="button">30</button>
+                          <button class="btn cal-btn" type="button">31</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+CALENDER FILTER CSS:
+
+.dropdown-menu {
+    margin: 4rem auto;
+  }
+  
+  .dropdown-item-danger {
+    color: var(--bs-red);
+  }
+  .dropdown-item-danger:hover,
+  .dropdown-item-danger:focus {
+    color: #fff;
+    background-color: var(--bs-red);
+  }
+  .dropdown-item-danger.active {
+    background-color: var(--bs-red);
+  }
+  
+  .btn-hover-light {
+    background-color: var(--bs-white);
+  }
+  .btn-hover-light:hover,
+  .btn-hover-light:focus {
+    color: var(--bs-blue);
+    background-color: var(--bs-light);
+  }
+  
+  .cal-month,
+  .cal-days,
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: center;
+  }
+  .cal-month-name {
+    grid-column-start: 2;
+    grid-column-end: 7;
+    text-align: center;
+  }
+  .cal-weekday,
+  .cal-btn {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    padding: 0;
+  }
+  .cal-btn:not([disabled]) {
+    font-weight: 500;
+  }
+  .cal-btn:hover,
+  .cal-btn:focus {
+    background-color: rgba(0, 0, 0, .05);
+  }
+  .cal-btn[disabled] {
+    border: 0;
+    opacity: .5;
+  }
+  
+  .form-control-dark {
+    background-color: rgba(255, 255, 255, .05);
+    border-color: rgba(255, 255, 255, .15);
+  }
+  
+  
+  .w-220px {
+    width: 220px;
+  }
+  
+  .w-280px {
+    width: 280px;
+  }
+  
+  .w-340px {
+    width: 340px;
+  }
+  
+  .w-600px {
+    width: 600px;
+  }
+
+
+
+CATEGORY SORT OLD:
+
+function categorySort(){
+    let table = document.getElementById('transaction-table');
+    let rows;
+    let i = 1, k, x;
+    let categories = [];
+    let current;
+    // keeps track of where to place the current row
+    let hasCategory = 1;// = 1 which is 0 fr tbody
+    rows = table.rows;
+    let n = rows.length;
+    for (let j = 1; j < n; j++){
+        current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        if (!categories.includes(current)){
+            categories.push(current);
+        }
+    }
+    console.log(categories)
+    // for each category in categories
+    for (k = 0; k < (categories.length - 1); k++){
+        //reset the counters
+        hasCategory = 1;
+        // loops throught the table until it is sorted, does not stop until i = n-1
+        for (let counter = 0; i < (n - 1); counter++){
+            // get the current category to sort
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            // if category in categories add it before last element with categories[k]
+            if (x == categories[k]){
+                rows[i].parentNode.insertBefore(rows[i], rows[hasCategory]);
+                // increments hascategory to insert next row into correct position
+                hasCategory++;
+                // 
+                i++;
+            }
+            // add row to end of table
+            else{
+                rows[i].parentNode.insertBefore(rows[i], null);
+            }
+            if (counter > n){
+                break;
+            }
+        }
+    }
+}
+
+CATEGORY SORT NEW:
+
+function categorySort(){
+    let table = document.getElementById('transaction-table');
+    let rows = table.rows;
+    let i = 1, k, x;
+    let categories = [];
+    for (let j = 1; j < rows.length; j++){
+        let current = rows[j].childNodes[9].lastChild.value.toLowerCase();
+        if (!categories.includes(current)){
+            categories.push(current);
+        }
+    }
+    // for each category in categories
+    for (k = 0; k < categories.length; k++){
+        // keeps track of where to place the current row
+        let hasCategory = 1;
+        // loops throught the table until it is sorted, does not stop until i = n-1
+        for (let counter = 0; i < rows.length; counter++){
+            // get the current category to sort
+            x = rows[i].childNodes[9].lastChild.value.toLowerCase();
+            // if category in categories add it before last element with categories[k]
+            if (x == categories[k]){
+                rows[i].parentNode.insertBefore(rows[i], rows[hasCategory]);
+                // increments hascategory to insert next row into correct position
+                hasCategory++;
+                i++
+            }
+            // add row to end of table
+            rows[i].parentNode.insertBefore(rows[i], null);
+            if (counter > rows.length){
+                break;
+            }
+        }
+    }
+}
