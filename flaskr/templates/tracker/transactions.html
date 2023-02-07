@@ -8,8 +8,8 @@
 
 {% block main %}
     <form id="transaction_table" method="post">
-        <div class="row px-5 py-1" style="background-color: blueviolet;">
-            <div class="col-auto my-3" style="background-color: rgb(255, 127, 157);">
+        <div class="row px-5 py-1">
+            <div class="col-auto my-3">
                 <div class="input-group">
                     <button class="btn btn-primary" type="button" id="clear_sort">Clear</button>
                     <div class="form-floating">
@@ -23,30 +23,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto my-3" style="background-color: aqua;">
-                <div class="input-group">
-                    <button class="btn btn-primary" type="button" id="clear_filter">Clear</button>
-                    <div class="form-floating">
-                        <select class="form-select" id="filter">
-                            <option selected disabled>Filter</option>
-                            <option value="1">Date Range</option>
-                            <option value="2">Type</option>
-                            <option value="3">Recently Uploaded</option>
-                            <option value="4">Bank</option>
-                        </select>
-                        <label for="filter">Filter By: </label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-auto my-3">
-                <button class="btn btn-primary" type="button" id="open_calender">
-                    <img src="static/assets/calendar3.svg" alt="Clear" width="32" height="32">
-                </button>
-            </div>
         </div>
         <div class="px-5">
             <table class="table table-striped" id="transaction-table">
-                <thead style="background-color: beige;">
+                <thead style="background-color: rgba(218, 218, 218, 0.973);">
                     <tr>
                         <th>Bank</th>
                         <th>Date</th>
