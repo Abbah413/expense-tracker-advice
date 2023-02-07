@@ -14,7 +14,7 @@ CREATE TABLE transactions (
   bank TEXT NOT NULL,
   transacted DATE NOT NULL,
   uploaded DATETIME NOT NULL,
-  amount DECIMAL(6, 2) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
   [description] TEXT NOT NULL,
   category TEXT,
   user_id INTEGER,
@@ -24,7 +24,7 @@ CREATE TABLE transactions (
 CREATE TABLE categories (
   category_id INTEGER PRIMARY KEY AUTOINCREMENT,
   category TEXT,
-  budget DECIMAL(6, 2),
+  budget DECIMAL(10, 2),
   user_id INTEGER,
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
