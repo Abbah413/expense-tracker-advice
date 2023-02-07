@@ -25,7 +25,11 @@ body {
 }
 
 .category_header {
-    width: 15%;
+    width: 20%;
+}
+
+.budget_header {
+  width: 15%;
 }
 
 .remove_button {
@@ -37,3 +41,5 @@ body {
 .remove_button:hover {
     color: red;
 }
+
+
