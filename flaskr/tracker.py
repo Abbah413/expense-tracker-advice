@@ -28,45 +28,45 @@ def allowed_file(filename):
 @login_required
 def index():
     db = get_db()
-    CategoryTotals = []
+    totals = []
     # get the users categories from the table
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
     # returns the totals for each category
-    CategoryTotals = category_totals(categories)
-    return render_template('tracker/index.html', categories=CategoryTotals)
+    totals = category_totals(categories)
+    return render_template('tracker/index.html', categories=totals)
 
 @bp.route('/', methods=['POST'])
 @login_required
 def append_summary():
     db = get_db()
     # returns {category : 'value'}
-    JsonData = request.get_json()
-    if JsonData['action'] == 'add':
-        JsonData = is_capital(JsonData)        
+    json_data = request.get_json()
+    if json_data['action'] == 'add':
+        json_data = is_capital(json_data)        
         # if the category is not in category table add it
-        if not has_category(JsonData['category']):
+        if not has_category(json_data['category']):
             # add the new category to the table
-            db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (JsonData['category'], session['user_id']))
+            db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (json_data['category'], session['user_id']))
             db.commit()
             # returns the category totals
-            total = category_totals(JsonData)
+            total = category_totals(json_data)
             # sets the format to return the totals then returns them
-            SendJson = {'category' : JsonData['category'], 'amount' : total[0]['amount']}
-            return SendJson
+            send_json = {'category' : json_data['category'], 'amount' : total[0]['amount']}
+            return send_json
         else:
             return {'response' : None}
 
-    if JsonData['action'] == 'remove':
-        db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (JsonData['category'], session['user_id']))
+    if json_data['action'] == 'remove':
+        db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (json_data['category'], session['user_id']))
         db.commit()
-        if not has_category(JsonData['category']):
+        if not has_category(json_data['category']):
             return {'response' : 'removed'}
         else:
             return {'response' : None}
 
-    if JsonData['action'] == 'budget' and has_category(JsonData['category']):
-        print(JsonData['budget'])
-        db.execute('UPDATE categories SET budget = ? WHERE category = ? AND user_id = ?', ((JsonData['budget']), JsonData['category'], session['user_id']))
+    if json_data['action'] == 'budget' and has_category(json_data['category']):
+        print(json_data['budget'])
+        db.execute('UPDATE categories SET budget = ? WHERE category = ? AND user_id = ?', ((json_data['budget']), json_data['category'], session['user_id']))
         db.commit()
         return {'response' : 'added'}
     else:
@@ -105,14 +105,14 @@ def transactions():
 
     if request.method == 'POST':
         # get the category from users input in transaction form
-        JsonData = request.get_json()
-        JsonData = is_capital(JsonData)
+        json_data = request.get_json()
+        json_data = is_capital(json_data)
         # add users category to corrisponding transaction
-        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (JsonData['category'], JsonData['transid']))
+        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (json_data['category'], json_data['transid']))
         db.commit()
         # check for user category in categories table
         # if users category in categories
-        if has_category(JsonData['category']):
+        if has_category(json_data['category']):
             return {'response': 'received'}
         # else return category not in table
         else:
