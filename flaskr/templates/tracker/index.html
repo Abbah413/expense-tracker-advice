@@ -8,8 +8,8 @@
 
 {% block main %}
     <form id="summary_table" method="post"></form>
-        <div class="row mx-5 px-1 py-1" style="background-color: blueviolet;">
-            <div class="col-auto" style="background-color: white;">
+        <div class="row mx-5 px-1 py-1">
+            <div class="col-auto">
                 <button type="button" class="btn btn-outline-primary" onclick="addnew()" id="addcategory">
                     <i class="bi bi-plus-square text-primary"></i>
                 </button>
@@ -20,7 +20,7 @@
             <table class="table table-hover" id="categorytable">
                 <thead>
                     <th class="category_header" style="background-color: rgb(186, 87, 87);">Categories</th>
-                    <th style="background-color: rgb(94, 160, 160);">Budget</th>
+                    <th class="budget_header" style="background-color: rgb(94, 160, 160);">Budget</th>
                     <th style="background-color: rgb(168, 203, 101);">Category Totals</th>
                 </thead>
                 <tbody>
@@ -47,11 +47,6 @@
                         <td class="b-total"></td>
                         <td class="a-total"></td>
                     </tr>
-                    <tr class="savings">
-                        <th>Savings:</th>
-                        <td class="b-savings"></td>
-                        <td class="t-savings"></td>
-                    </tr>
                     <tr class="income">
                         <th>Income:</th>
                         <td></td>
@@ -65,7 +60,6 @@
                         <th>Net:</th>
                         <td></td>
                         <td class="net-income"></td>
-
                     </tr>
                 </tfoot>
             </table>
