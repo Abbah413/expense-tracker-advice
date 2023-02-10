@@ -1,4 +1,0 @@
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="right"
-                            data-bs-custom-class="custom-tooltip"
-                            data-bs-title="Tooltip on top"
