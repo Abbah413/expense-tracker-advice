@@ -37,7 +37,13 @@
                     <th>Amount</th>
                     <th>Description</th>
                     <th class="row" style="border: none;">
-                        <div class="col-auto me-auto">Type</div>
+                        <div class="col-auto me-auto">Categories
+                            <i class="bi bi-exclamation-circle custom-tooltip"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom"
+                            data-bs-title='To add label your transactions check the box, then input the corresponding category below.'>
+                            </i>
+                        </div>
                         <div class="col-auto">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="can_edit">
@@ -86,5 +92,6 @@
     <script src="{{url_for('static', filename='edit_type.js')}}"></script>
     <script src="{{url_for('static', filename='sort.js')}}"></script>
     <script src="{{url_for('static', filename='delete_transactions.js')}}"></script>
+    <script src="{{url_for('static', filename='tooltips.js')}}"></script>
 {% endblock %}
 
