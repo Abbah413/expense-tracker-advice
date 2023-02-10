@@ -27,10 +27,13 @@ def allowed_file(filename):
 @bp.route('/')
 @login_required
 def index():
+    print(session['user_id'])
     db = get_db()
     totals = []
     # get the users categories from the table
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
+    for row in categories:
+        print(row['category'])
     # returns the totals for each category
     totals = category_totals(categories)
     return render_template('tracker/index.html', categories=totals)
@@ -107,16 +110,24 @@ def transactions():
         # get the category from users input in transaction form
         json_data = request.get_json()
         json_data = is_capital(json_data)
-        # add users category to corrisponding transaction
-        db.execute('UPDATE transactions SET category = ? WHERE id = ?', (json_data['category'], json_data['transid']))
-        db.commit()
-        # check for user category in categories table
-        # if users category in categories
-        if has_category(json_data['category']):
-            return {'response': 'received'}
-        # else return category not in table
-        else:
-            return {'response': None}
+
+
+        if json_data['action'] == 'Type':
+            # add users category to corrisponding transaction
+            db.execute('UPDATE transactions SET category = ? WHERE id = ?', (json_data['category'], json_data['transid']))
+            db.commit()
+            # check for user category in categories table
+            # if users category in categories
+            if has_category(json_data['category']):
+                return {'response': 'received'}
+            # else return category not in table
+            else:
+                return {'response': None}
+
+        if json_data['action'] == 'Delete':
+            db.execute('DELETE FROM transactions WHERE user_id = ?', (session['user_id'],))
+            db.commit()
+            return {'response': 'deleted'}
     else:
         # output users transactions to the transaction form
         return render_template('tracker/transactions.html', output=output)
