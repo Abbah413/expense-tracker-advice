@@ -17,9 +17,9 @@ document.addEventListener("input", function () {
 
 document.addEventListener("change", (e) => {
   let type = e.target;
-  data = {transid : type.dataset.transid, category : type.value};
+  data = {action : "type", transid : type.dataset.transid, category : type.value};
   if (data["transid"]){
-    const transactions_url = "/transactions"
+    const transactions_url = "/transactions";
     fetch(transactions_url, {
       headers : {
         "Content-Type" : "application/json"

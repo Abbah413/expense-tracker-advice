@@ -5,14 +5,15 @@ function addNew() {
   let row = tbody.insertRow();
   createCategory(row);
   createBudget(row);
-  row.insertCell();
+  let amountCell = row.insertCell();
+  amountCell.setAttribute("class", "amount");
 }
 // Creates the table row
 function createCategory(row) {
   let cell1 = row.insertCell();
   cell1.setAttribute("class", "py-1");
   let div = document.createElement("DIV");
-  div.setAttribute("class", "input-group py-0");
+  div.setAttribute("class", "input-group pt-1");
   cell1.appendChild(div);
   let button = buttonAttributes();
   let input = inputAttributes();
@@ -50,9 +51,10 @@ function buttonAttributes() {
 // creates the budget input
 function createBudget(row) {
   const attributeDict = {
-    type: "number",
     class: "form-control",
+    type: "number",
     placeholder: "Budget",
+    value: ""
   };
   const input = document.createElement("INPUT");
   for (const key in attributeDict) {
@@ -62,6 +64,7 @@ function createBudget(row) {
   cell2.setAttribute("class", "budget");
   cell2.appendChild(input);
 }
+
 
 // Removes the row from the table
 document.addEventListener("click", e => {
@@ -103,4 +106,5 @@ function send_data(data){
 function removeElement(parent){
   let row = parent.parentNode.parentNode.parentNode;
   row.parentNode.removeChild(row);
+  update();
 }

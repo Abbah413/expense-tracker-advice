@@ -28,10 +28,7 @@ document.addEventListener("change", (e) => {
   // budget input
   let input = e.target;
   if (input.type === "number"){
-    let td = input.parentNode;
-    let catTD = td.previousSibling.previousSibling;
-    let div = catTD.childNodes[1];
-    let category = div.childNodes[3];
+    let category = input.parentNode.previousElementSibling.lastElementChild.lastElementChild;
     let data = {action : "budget", category : category.value, budget : input.value};
     const index_url = "/"
     fetch(index_url, {
@@ -60,8 +57,10 @@ function appendTable(input, data){
   input.readOnly = true;
   let td = input.parentNode.parentNode;
   let amount = td.nextSibling.nextSibling;
-  let value = parseFloat(data["amount"]).toFixed(2);
-  amount.innerHTML = "$" + Math.abs(value);
+  if (data["amount"]){
+    let value = parseFloat(data["amount"]).toFixed(2);
+    amount.innerHTML = "$" + Math.abs(value);
+  }
   update();
 }
 
@@ -79,17 +78,21 @@ function update() {
   for (let i = 0; i < budgets.length; i++) {
     let category = removeButtons[i].nextElementSibling.value;
     let budget = budgets[i].childNodes[0].value;
-    if (budget.length > 0 && category != "Income"){
-      btotal = btotal + parseFloat(budget);
+    if (budget){
+      if (budget.length > 0 && category != "Income"){
+        btotal = btotal + parseFloat(budget);
+      }
     }
   }
   // get the sum of absolute value of the amounts
   for (let i = 0; i < amounts.length; i++) {
     let category = removeButtons[i].nextElementSibling.value;
-    if (category != "Income") {
-      let a = amounts[i].innerHTML.replace(/\$/g, "");
-      atotal = atotal + Math.abs(parseFloat(a));
-    }
+      if (category != "Income") {
+        if (amounts[i].innerHTML){
+          let a = amounts[i].innerHTML.replace(/\$/g, "");
+          atotal = atotal + Math.abs(parseFloat(a));
+        }
+      }
   }
   // format the totals then update them
   let total1 = document.getElementsByClassName("b-total");
@@ -100,14 +103,19 @@ function update() {
   for (let i = 0; i < removeButtons.length; i++) {
     if (removeButtons[i].nextElementSibling.value == "Income") {
       let incomeList = document.getElementsByClassName("t-income");
-      let income = incomeList[0].innerHTML.replace(/\$/g, "");
-      let netIncome = (income - atotal).toFixed(2)
-      if (netIncome < 0) {
-        net[0].innerHTML = "-$" + Math.abs(netIncome).toFixed(2);
-        net[0].style.color = "red";
-      }
-      else {
-        net[0].innerHTML = "$" + netIncome.toFixed(2);
+      if(incomeList[0]){
+        console.log(incomeList)
+        let income = incomeList[0].innerHTML.replace(/\$/g, "");
+        let netIncome = (income - atotal).toFixed(2)
+        if (netIncome < 0) {
+          net[0].innerHTML = "-$" + Math.abs(netIncome).toFixed(2);
+          net[0].style.color = "red";
+        }
+        else {
+          if (netIncome != "NaN"){
+            net[0].innerHTML = "$" + netIncome.toFixed(2);
+          }
+        }
       }
     }
   }
