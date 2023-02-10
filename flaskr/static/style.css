@@ -1,45 +1,291 @@
-main{
-    background-color: white;
 
+body{
+  background-color: #3aafa9;
 }
 
-body {
-    background-color: #d2f4ea;
+.navbar-brand {
+  font-family: 'Baloo Tamma 2', cursive;
+  font-size:48pt;
+  padding: 0%;
 }
 
+.nav-item {
+  background-color: #17252a;
+  border-radius: 9999px;
+  text-align: center;
+  min-width: 100px;
+  border: none;
+  margin-left: .5rem;
+  margin-right: .5rem;
+  padding: auto;
+  font-family: 'Ubuntu', sans-serif;
+  transition-duration: 0.4s;
+}
 
-#addlabel {
-    font-size: 1.2em;
-    font-weight: bold;
+.nav-item:hover {
+  background-color: #17252a95;
+}
+
+#add-button {
+  margin-left: .25vw;
+  margin-bottom: .25vw;
+  color:#17252a;
 }
 
 #addcategory {
-    border: none;
-    background: none;
-    padding: 0px;
-    line-height: 16px;
+  border: none;
+  background: none;
+  padding: 0px;
+  line-height: 16px;
+  color:#17252a;
+  font-weight: bold;
+}
+
+#addcategory:hover {
+  color: #2b7a78;
+}
+#addcategory:focus {
+  box-shadow: none;
+}
+
+#addlabel {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#addlabel:hover {
+  color: #2b7a78;
 }
 
 .bi-plus-square {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .category_header {
-    width: 20%;
+  width: 20%;
 }
 
 .budget_header {
-  width: 15%;
+width: 15%;
 }
 
 .remove_button {
-    border: none;
-    background: none;
-    padding-left: 0px;
+  border: none;
+  background: none;
+  padding-left: 0px;
+  
 }
 
 .remove_button:hover {
-    color: red;
+  color: red;
 }
 
+#login-group {
+  margin: auto;
+  margin-top:15vh;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  background-color: #2b7a78;
+  border-radius: 25px;
+  padding-top: auto;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 300;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#login-button {
+  background-color: #17252a;
+  color: #feffff;
+  border: none;
+  border-radius: 9999px;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  transition-duration: 0.4s;
+}
+
+#login-button:hover {
+  background-color: #17252a95;
+}
+
+#register-form {
+  background-color: #2b7a78;
+  border-radius: 25px;
+  border-color: #17252a;
+  border-width: 3px;
+  color: #17252a;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 300;
+}
+
+#register-text {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+#summary_table {
+  background-color: #def2f1;
+  margin-right: 5vw;
+  margin-left: 5vw;
+  border-radius: 25px;
+  padding: 1vw;
+  padding: 1vh;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+
+#table-head {
+  background-color: #2b7a78;
+  color: #17252a;
+}
+
+#import-form {
+  background-color: #2b7a78;
+  border-radius: 25px;
+  margin: 15rem;
+  padding-top: 4em;
+  padding-right: 5em;
+  padding-left: 5em;
+  text-align: center;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+#accepted-formats {
+  font-weight: bold;
+}
+
+#upload-button {
+  background-color: #17252a;
+  color: #feffff;
+  border: none;
+  border-radius: 9999px;
+  margin-top: 3em;
+  margin-bottom: 6em;
+  padding: 8px;
+  min-width: 200px;
+  transition-duration: 0.4s;
+}
+
+#upload-button:hover {
+  background-color: #17252ac0;
+}
+
+#upload-input {
+  border-radius: 25px;
+}
+
+#transaction_table {
+  background-color: #def2f1;
+  margin-right: 5vw;
+  margin-left: 5vw;
+  border-radius: 25px;
+  padding: 1vw;
+  padding: 1vh;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+#can_edit:checked {
+  background-color: #3aafa9;
+}
+
+#clear_sort {
+  background-color: #17252a;
+  color: #feffff;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  transition-duration: 0.4s;
+}
+
+#clear_sort:hover {
+  background-color: #17252aca;
+}
+
+#clear_sort:focus {
+  box-shadow: none;
+}
+
+#sort:focus {
+  box-shadow: none;
+}
+
+#delete-transactions {
+  background-color: #17252a;
+  color: #feffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px;
+  min-width: 200px;
+  transition-duration: 0.4s;
+}
+
+#delete-transactions:hover {
+  background-color: #17252aca;
+}
+
+.modal-content {
+  background-color: #3aafa9;
+  border-radius: 25px;
+  color: #feffff;
+}
+
+.modal-header {
+  color: red;
+  border-color: #2b7a78;
+}
+
+.modal-body {
+  font-size: 1.2em;
+}
+
+.modal-footer {
+  border-color: #2b7a78;
+}
+
+#modal-delete-button {
+  background-color: #17252a;
+  color: #feffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px;
+  min-width: 200px;
+  transition-duration: 0.4s;
+  margin: auto;
+}
+
+#modal-delete-button:hover {
+  background-color: #17252aca;
+}
+
+#modal-close-button {
+  background-color: #def2f1;
+  color: #17252a;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px;
+  min-width: 200px;
+  transition-duration: 0.4s;
+  margin: auto;
+}
+
+#modal-close-button:hover {
+  background-color: #b6d4d2;
+}
 

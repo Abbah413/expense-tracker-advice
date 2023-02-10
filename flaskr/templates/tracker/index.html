@@ -7,21 +7,23 @@
 {% endblock %}
 
 {% block main %}
-    <form id="summary_table" method="post"></form>
-        <div class="row mx-5 px-1 py-1">
-            <div class="col-auto">
-                <button type="button" class="btn btn-outline-primary" onclick="addNew()" id="addcategory">
-                    <i class="bi bi-plus-square text-primary"></i>
+    <form id="summary_table" method="post">
+        <div id="add-button" class="row">
+            <div class="col-auto me-auto">
+                <button type="button" class="btn btn-outline" onclick="addNew()" id="addcategory">
+                    <i class="bi bi-plus-square"> Add Category</i>
                 </button>
-                <label class="text-primary" id="addlabel">Add Category</label>
+            </div>
+            <div id="summary-logo" class="col-auto">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="48" height="48">
             </div>
         </div>
-        <div class="px-5">
+        <div id="table-content">
             <table class="table table-hover" id="categorytable">
-                <thead>
-                    <th class="category_header" style="background-color: rgb(186, 87, 87);">Categories</th>
-                    <th class="budget_header" style="background-color: rgb(94, 160, 160);">Budget</th>
-                    <th style="background-color: rgb(168, 203, 101);">Category Totals</th>
+                <thead id="table-head">
+                    <th class="category_header">Categories</th>
+                    <th class="budget_header">Budget</th>
+                    <th>Category Totals</th>
                 </thead>
                 <tbody>
                     {% for row in categories %}
@@ -48,10 +50,15 @@
                         <td class="a-total"></td>
                     </tr>
                     <tr class="income">
-                        <th>Income:</th>
+                        <th>Income: <i class="bi bi-exclamation-circle" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Tooltip on top"></i>
+                        </th>
                         <td></td>
                         {% for row in categories %}
-                            {% if row.category == 'Income' %}
+                            {% if row.category == 'Income' and row.amount %}
                                 <td class="t-income">${{ row.amount | abs}}</td>
                             {% endif %}
                         {% endfor %}
@@ -67,4 +74,5 @@
     </form>
     <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
     <script src="{{url_for('static', filename='update_summary.js')}}"></script>
+    <script src="{{url_for('static', filename='tooltips.js')}}"></script>
 {% endblock %}
