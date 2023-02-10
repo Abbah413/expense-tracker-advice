@@ -28,20 +28,22 @@ def category_totals(cat_list):
     if type(cat_list) == list:
         # iterates throught the list of categories
         for item in cat_list:
-            total = db.execute('SELECT transactions.category, ROUND(SUM(amount), 2), ROUND(categories.budget, 2) \
-                                FROM transactions \
-                                JOIN categories ON transactions.category = categories.category \
-                                WHERE transactions.category = ? AND transactions.user_id = ?',
+            total = db.execute('SELECT category, ROUND(SUM(amount), 2) FROM transactions \
+                                WHERE category = ? AND user_id = ?',
                                 (item['category'], session['user_id'])
-                                ).fetchall()
-                                
+                                )
+            budget = db.execute('SELECT ROUND(budget, 2) FROM categories WHERE category = ? AND user_id = ?',
+                                (item['category'], session['user_id'])
+                                ).fetchone()
+                
+                               
             for row in total:
                 if row['category'] == None:
-                    totals.append({'category' : item['category'], 'amount' : None})
-                if row['ROUND(categories.budget, 2)'] == None:
-                    totals.append({'category' : row['category'], 'amount' : row['ROUND(SUM(amount), 2)']})
+                    totals.append({'category' : item['category'], 'budget' : budget['ROUND(budget, 2)'] or None,'amount' : None})
+                    print('1')
                 else:
-                    totals.append({'category' : row['category'], 'budget' : row['ROUND(categories.budget, 2)'], 'amount' : row['ROUND(SUM(amount), 2)']})
+                    totals.append({'category' : row['category'], 'budget' : budget['ROUND(budget, 2)'] or None, 'amount' : row['ROUND(SUM(amount), 2)'] or None})
+                    print('2')
         return totals
     # else input is not a list
     else:
@@ -70,7 +72,7 @@ def is_capital(CategoryDict):
 
 def has_category(category):
     db = get_db()
-    HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (category,session['user_id'])).fetchone()
+    HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (category, session['user_id'])).fetchone()
     if HasCategory:
         return True
     else:
