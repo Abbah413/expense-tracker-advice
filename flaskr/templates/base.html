@@ -54,22 +54,13 @@
                 </div>
             </div>
         </nav>
-
-        {% if get_flashed_messages() %}
-            <header>
-                <div class="alert alert-primary mb-0 text-center" role="alert">
-                    {{ get_flashed_messages() | join(" ") }}
-                </div>
-            </header>
-        {% endif %}
-
         <main>
             {% block main %}{% endblock %}
             {% block clear %}{% endblock %}
         </main>
 
-        <footer class="mb-5 small text-center text-muted">
-            
+        <footer class="m-3 small text-center">
+        
         </footer>
 
     </body>
