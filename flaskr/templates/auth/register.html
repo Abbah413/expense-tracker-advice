@@ -20,12 +20,15 @@
         <div class="col-md-10 mx-auto col-lg-5">
             <form id="register-form" class="p-4 p-md-5 shadow" method="post">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username">
-                <label for="floatingInput">Username</label>
+                <input type="email" class="form-control" id="floatingInput" name="username" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
                 <label for="floatingPassword">Password</label>
+            </div>
+            <div class="login-errors">
+                <p class="error">{{ get_flashed_messages() | join(" ") }}</p>
             </div>
             <button class="btn btn-lg w-100" type="submit" id="login-button">Sign up</button>
             <hr class="my-4">
