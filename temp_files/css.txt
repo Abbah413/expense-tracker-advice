@@ -1,35 +1,4 @@
-main{
-    background-color: #d2f4ea;
-    height: 50%;
-}
-
-body {
-    background-color: #d2f4ea;
-}
-
-.form-signin {
-    border-radius: 25px;
-
-    background-color: #a5e9d5;a5e9d5
-    align-items: center;
-    text-align: center;
-    margin-top: 200px;
-    max-width: 330px;
-    padding: 15px;
-}
-
-.form-signin .form-floating:focus-within {
-    z-index: 2;
-}
-
-.form-signin input[type="text"] {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right"
+                            data-bs-custom-class="custom-tooltip"
+                            data-bs-title="Tooltip on top"
