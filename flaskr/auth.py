@@ -30,6 +30,11 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
+                user = db.execute(
+                    'SELECT * FROM user WHERE username = ?', (username,)
+                    ).fetchone()
+                db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', ('Income', user['user_id']))
+                db.commit()
                 return redirect(url_for("auth.login"))
 
         flash(error)
