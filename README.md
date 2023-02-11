@@ -1,4 +1,6 @@
 # BalanceBoost
+## Video URL
+- https://youtu.be/VWW1IOA75tk
 ## Overview:
 Balance Boost is a user-friendly expense tracking tool that allows you to effortlessly 
 track your spending by uploading your bank statements as .csv files. With the option 
