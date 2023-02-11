@@ -78,17 +78,3 @@ def has_category(category):
     else:
         return False
 
-
-    """
-        SELECT transactions.amount, categories.budget, categories.category
-        FROM transactions 
-        LEFT JOIN transactions
-        ON transactions.category = categories.category
-        WHERE category = "Gasoline" AND user_id = 1
-
-        SELECT transactions.category, ROUND(SUM(transactions.amount)), categories.budget
-        FROM transactions
-        JOIN categories ON transactions.category = categories.category
-        WHERE transactions.category = "Gasoline" AND transactions.user_id = 1
-        GROUP BY transactions.category;
-    """
