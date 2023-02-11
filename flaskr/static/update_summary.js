@@ -77,7 +77,7 @@ function update() {
   // get the sum of the budgets
   for (let i = 0; i < budgets.length; i++) {
     let category = removeButtons[i].nextElementSibling.value;
-    let budget = budgets[i].childNodes[0].value;
+    let budget = budgets[i].firstElementChild.value;
     if (budget){
       if (budget.length > 0 && category != "Income"){
         btotal = btotal + parseFloat(budget);
@@ -94,30 +94,32 @@ function update() {
         }
       }
   }
-  // format the totals then update them
+  // sets the value of b-total
   let total1 = document.getElementsByClassName("b-total");
   total1[0].innerHTML = "$" + btotal.toFixed(2);
+  // sets the value of a-total
   let total2 = document.getElementsByClassName("a-total");
   total2[0].innerHTML = "$" + atotal.toFixed(2);
-  let net = document.getElementsByClassName("net-income");
-  for (let i = 0; i < removeButtons.length; i++) {
-    if (removeButtons[i].nextElementSibling.value == "Income") {
-      let incomeList = document.getElementsByClassName("t-income");
-      if(incomeList[0]){
-        console.log(incomeList)
-        let income = incomeList[0].innerHTML.replace(/\$/g, "");
-        let netIncome = (income - atotal).toFixed(2)
+  netAfterLoad(atotal);
+}
+
+function netAfterLoad(atotal) {
+  let footerIncome = document.querySelector(".t-income");
+  if (footerIncome) {
+    let net = document.querySelector(".net-income");
+    let income = footerIncome.innerHTML.replace(/\$/g, "");
+        // convert income to float
+        let incomeToFloat = parseFloat(income);
+        // calculate the net
+        let netIncome = (incomeToFloat - atotal).toFixed(2);
+        // if net is neagtive make the text red
         if (netIncome < 0) {
-          net[0].innerHTML = "-$" + Math.abs(netIncome).toFixed(2);
-          net[0].style.color = "red";
+          net.innerHTML = "-$" + Math.abs(netIncome).toFixed(2);
+          net.style.color = "red";
         }
         else {
-          if (netIncome != "NaN"){
-            net[0].innerHTML = "$" + netIncome.toFixed(2);
-          }
-        }
+          net.innerHTML = "$" + netIncome;
       }
-    }
   }
 }
 
