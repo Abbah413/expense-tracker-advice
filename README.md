@@ -1,5 +1,4 @@
 # BalanceBoost
----
 ## Overview:
 Balance Boost is a user-friendly expense tracking tool that allows you to effortlessly 
 track your spending by uploading your bank statements as .csv files. With the option 
@@ -23,8 +22,6 @@ is only an option to delete all categories, but additional features may be added
 in the future.
 
 ## Python Functions
----
-
 ### Init.py
 - This file contains the application factory. It is the core of the app and connects all the flask blueprints together.
 
@@ -70,7 +67,6 @@ This file reads in CSV data, then parses it to figure out what bank it is from.
 - This contains a class that defines the format for the transactions
 
 ## JavaScript Functions
----
 This project uses a lot of JS functions to make calls to the back end so that the web pages are more dynamic and don't have to be reloaded while in use.
 ### Delete_transactions.js
 - This file has a function with an event listener to listen for when the delete button on the transaction page is clicked. If it is, the delete button, it uses fetch() to send a request containing the "delete" action. If the transactions are successfully deleted, it clears the users' transaction table.
