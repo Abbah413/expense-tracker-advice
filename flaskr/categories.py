@@ -3,49 +3,44 @@ from flask import session
 from flaskr.db import get_db
 from datetime import datetime
 
-# list of fields for the reader to use
-fieldnames = ['date', 'bank', 'amount', 'description', 'type', 'id']
-
-def format_output(filename):
+# Add the data returned by the CSV parser to database
+def format_output(data: list):
     db = get_db()
-
-    # open parsed csv then read from csv
-    with open(filename, newline='') as csvfile:
-        reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-        # inputeach row of csv into transactions table
-        for row in reader:
-            db.execute(
-                'INSERT INTO transactions (transacted, uploaded, bank, amount, description, category, user_id)'
-                'VALUES (?, ?, ?, ?, ?, ?, ?)',
-                (row['date'], datetime.now(), row['bank'], row['amount'], row['description'], row['type'], session['user_id'])
-                )
-            db.commit()
+    # input each row of data into transactions table
+    for row in data:
+        db.execute(
+            'INSERT INTO transactions (transacted, uploaded, bank, amount, description, category, user_id)'
+            'VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (row[0], datetime.now(), row[1], row[2], row[3], row[4], session['user_id'])
+            )
+        db.commit()
 
 
-def category_totals(cat_list):
+def category_totals(cat_list: list | str) -> list:
     db = get_db()
     totals = []
+    # If user is redirected to summary page
     if type(cat_list) == list:
-        # iterates throught the list of categories
+        # Iterates throught users list of categories
         for item in cat_list:
+            # Sums all expenses with the current category name
             total = db.execute('SELECT category, ROUND(SUM(amount), 2) FROM transactions \
                                 WHERE category = ? AND user_id = ?',
                                 (item['category'], session['user_id'])
                                 )
+            # Retrieve the budgeted amount for the current category
             budget = db.execute('SELECT ROUND(budget, 2) FROM categories WHERE category = ? AND user_id = ?',
                                 (item['category'], session['user_id'])
                                 ).fetchone()
-                
-                               
+            # Format the returned values          
             for row in total:
+                # If the entry does not have a category name
                 if row['category'] == None:
                     totals.append({'category' : item['category'], 'budget' : budget['ROUND(budget, 2)'] or None,'amount' : None})
-                    print('1')
                 else:
                     totals.append({'category' : row['category'], 'budget' : budget['ROUND(budget, 2)'] or None, 'amount' : row['ROUND(SUM(amount), 2)'] or None})
-                    print('2')
         return totals
-    # else input is not a list
+    # Else user added a new category
     else:
         total = db.execute('SELECT category, ROUND(SUM(amount), 2) FROM transactions WHERE category = ? AND user_id = ?', (cat_list['category'], session['user_id'])).fetchall()
         for row in total:
@@ -53,7 +48,8 @@ def category_totals(cat_list):
         return totals
 
 
-def is_capital(CategoryDict):
+# Format category names to begin with a capital letter
+def is_capital(CategoryDict: str | list | dict):
     if type(CategoryDict) == dict:
         for key, word in CategoryDict.items():
             if word[0].islower():
@@ -70,11 +66,11 @@ def is_capital(CategoryDict):
         return CategoryDict
 
 
-def has_category(category):
+# Check if a category is in users categoyr in database
+def has_category(category: str) -> bool:
     db = get_db()
     HasCategory = db.execute('SELECT * FROM categories WHERE category = ? AND user_id= ?', (category, session['user_id'])).fetchone()
     if HasCategory:
         return True
     else:
         return False
-

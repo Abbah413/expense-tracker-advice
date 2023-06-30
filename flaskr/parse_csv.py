@@ -3,45 +3,33 @@ from flaskr import line_parsers
 from flaskr import models
 import re
 import io
-import os
 
-
-def import_file(filename):
+# Parse the uploaded bank statement and return the output file 
+def parse_csv(filename, line_parser=None):
+    csv_content = str
     with open(filename, newline='') as csvfile:
-        content = csvfile.read()
-        output = Parse(content)
-        export_file(output, filename)
+        csv_content = csvfile.read()
 
+    line_parser = line_parser or line_parsers.FindLineParser(csv_content)
+    csv_content = line_parser.StripNonCsvData(csv_content)
+    bank_name = line_parser.GetBankName()
+    csv_mem_file = io.StringIO(csv_content)
+    dialect = 'excel'
+    has_header = _HasHeader(csv_content)
 
-def export_file(output, filename):
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for row in output:
-            writer.writerow(row)
+    if has_header:
+        reader = csv.DictReader(csv_mem_file, dialect=dialect)
+    else:
+        reader = csv.reader(csv_mem_file, dialect=dialect)
 
+    transactions = []
+    
+    for line_item in reader:
+        tran = line_parser.ParseLine(line_item, bank_name)
+        if tran:
+            transactions.append(tran)
 
-def Parse(csv_content, line_parser=None):
-  line_parser = line_parser or line_parsers.FindLineParser(csv_content)
-  csv_content = line_parser.StripNonCsvData(csv_content)
-  bank_name = line_parser.GetBankName()
-  csv_mem_file = io.StringIO(csv_content)
-  # dialect = csv.Sniffer().sniff(csv_content)
-  dialect = 'excel'
-  has_header = _HasHeader(csv_content)
-
-  if has_header:
-    reader = csv.DictReader(csv_mem_file, dialect=dialect)
-  else:
-    reader = csv.reader(csv_mem_file, dialect=dialect)
-
-  transactions = []
-
-  for line_item in reader:
-    tran = line_parser.ParseLine(line_item, bank_name)
-    if tran:
-      transactions.append(tran)
-
-  return transactions
+    return transactions
 
 
 def _HasHeader(csv_content):
