@@ -1,7 +1,6 @@
 import collections
-import datetime
 
-
+# Define the desired csv format
 class Transaction(collections.namedtuple('Transaction',
                                          'date bank amount description type id_')):
   _global_id = 0

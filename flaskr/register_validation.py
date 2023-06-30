@@ -1,7 +1,7 @@
 import re
 
 
-def is_valid(username, password):
+def is_valid(username: str, password: str):
     if not username:
         error = 'Username is required.'
         return error
@@ -24,6 +24,6 @@ def is_valid(username, password):
     return None
 
 
-def has_special_characters(password):
+def has_special_characters(password: str):
     special_characters = re.compile(r'[!@#$%^&*(),.?":{}|<>]')
     return special_characters.search(password) is not None

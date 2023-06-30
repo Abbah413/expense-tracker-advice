@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-
 import csv
 import datetime
 import re
-
 from flaskr import models
 
 
 _REGISTERED_PARSERS = []
 
-
+# 
 def RegisterLineParser(cls):
   _REGISTERED_PARSERS.append(cls)
   return cls
