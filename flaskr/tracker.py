@@ -1,25 +1,22 @@
 import os
-import json
-import csv
-
-from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, session,
-)
-from werkzeug.exceptions import abort
-from werkzeug.utils import secure_filename
 from datetime import datetime
+
+from werkzeug.utils import secure_filename
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
-from flaskr.parse_csv import import_file
+from flaskr.parse_csv import parse_csv
 from flaskr.categories import format_output, category_totals, is_capital,has_category
+from flask import (
+    Blueprint, redirect, render_template, request, url_for, session,
+)
 
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
 bp = Blueprint('tracker', __name__)
 
-# check if imported file is csv
+# Check if imported file is csv
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -27,14 +24,11 @@ def allowed_file(filename):
 @bp.route('/')
 @login_required
 def index():
-    print(session['user_id'])
     db = get_db()
     totals = []
-    # get the users categories from the table
+    # Get the users categories from the table
     categories = db.execute('SELECT category FROM categories WHERE user_id = ?', (session['user_id'],)).fetchall()
-    for row in categories:
-        print(row['category'])
-    # returns the totals for each category
+    # Returns the totals for each category
     totals = category_totals(categories)
     return render_template('tracker/index.html', categories=totals)
 
@@ -42,23 +36,21 @@ def index():
 @login_required
 def append_summary():
     db = get_db()
-    # returns {category : 'value'}
-    json_data = request.get_json()
+    json_data = request.get_json() # Returns {category : 'value'}
     if json_data['action'] == 'add':
         json_data = is_capital(json_data)        
-        # if the category is not in category table add it
+        # If the category is not in category table add it
         if not has_category(json_data['category']):
-            # add the new category to the table
+            # Add the new category to the table
             db.execute('INSERT INTO categories (category, user_id) VALUES (?, ?)', (json_data['category'], session['user_id']))
             db.commit()
-            # returns the category totals
-            total = category_totals(json_data)
-            # sets the format to return the totals then returns them
+            total = category_totals(json_data) # Returns the category totals
+            # Sets the format to return the totals then returns them
             send_json = {'category' : json_data['category'], 'amount' : total[0]['amount']}
             return send_json
         else:
             return {'response' : None}
-
+    # Removes a category from the users list
     if json_data['action'] == 'remove':
         db.execute('DELETE FROM categories WHERE category = ? AND user_id = ?', (json_data['category'], session['user_id']))
         db.commit()
@@ -66,9 +58,8 @@ def append_summary():
             return {'response' : 'removed'}
         else:
             return {'response' : None}
-
+    # Add budget value for the specified category to the categories table
     if json_data['action'] == 'budget' and has_category(json_data['category']):
-        print(json_data['budget'])
         db.execute('UPDATE categories SET budget = ? WHERE category = ? AND user_id = ?', ((json_data['budget']), json_data['category'], session['user_id']))
         db.commit()
         return {'response' : 'added'}
@@ -87,12 +78,12 @@ def import_csv():
             new_filename = f'{filename.split(".")[0]}_{str(datetime.now())}.csv'
             FileLocation = os.path.join('flaskr/UPLOAD_FOLDER', new_filename)
             file.save(FileLocation)
-            # send the csv to the parser
-            import_file(FileLocation)
-            # input parsed csv into transactions table
-            format_output(FileLocation)
-            # delete the csv
+            # Send the csv to the parser
+            parsed_data = parse_csv(FileLocation)
+            # Delete the csv
             os.remove(FileLocation)
+            # Append the transactions table with the parsed data
+            format_output(parsed_data)
 
             return redirect(url_for('tracker.transactions'))
     else:
@@ -101,29 +92,28 @@ def import_csv():
 @bp.route('/transactions', methods=['GET', 'POST'])
 @login_required
 def transactions():
-    # access the database
+    # Access the database
     db = get_db()
-    # select all the users transactions
+    # Select all the users transactions
     output = db.execute('SELECT * FROM transactions WHERE user_id= ?', (session['user_id'],)).fetchall()
 
     if request.method == 'POST':
-        # get the category from users input in transaction form
+        # Get the category from users input in transaction form
         json_data = request.get_json()
         json_data = is_capital(json_data)
 
-
         if json_data['action'] == 'Type':
-            # add users category to corrisponding transaction
+            # Add users category to corrisponding transaction
             db.execute('UPDATE transactions SET category = ? WHERE id = ?', (json_data['category'], json_data['transid']))
             db.commit()
-            # check for user category in categories table
-            # if users category in categories
+            # Check for user category in categories table
+            # If users category in categories
             if has_category(json_data['category']):
                 return {'response': 'received'}
-            # else return category not in table
+            # Else return category not in table
             else:
                 return {'response': None}
-
+        # Clear the users transactions from the transactions table
         if json_data['action'] == 'Delete':
             db.execute('DELETE FROM transactions WHERE user_id = ?', (session['user_id'],))
             db.commit()
