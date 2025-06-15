@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-
     Summary
-
 {% endblock %}
 
 {% block main %}
@@ -79,7 +77,74 @@
             </table>
         </div>
     </form>
+
+    <!-- Chart container -->
+    <div style="max-width: 800px; margin: 2rem auto;">
+        <h3>Monthly Income vs Expenses</h3>
+        <canvas id="monthlyChart" height="300"></canvas>
+    </div>
+
+    <!-- Your existing scripts -->
     <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
     <script src="{{url_for('static', filename='update_summary.js')}}"></script>
     <script src="{{url_for('static', filename='tooltips.js')}}"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      // Fetch monthly data for the chart
+      fetch("{{ url_for('tracker.chart_data') }}")
+        .then(response => response.json())
+        .then(data => {
+          const ctx = document.getElementById('monthlyChart').getContext('2d');
+
+          const months = data.map(item => item.month);
+          const income = data.map(item => item.income);
+          const expenses = data.map(item => item.expense);
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: months,
+              datasets: [
+                {
+                  label: 'Income',
+                  data: income,
+                  borderColor: 'green',
+                  backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                  fill: true,
+                  tension: 0.3,
+                },
+                {
+                  label: 'Expenses',
+                  data: expenses,
+                  borderColor: 'red',
+                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                  fill: true,
+                  tension: 0.3,
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Amount (₦)'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Month'
+                  }
+                }
+              }
+            }
+          });
+        });
+    </script>
 {% endblock %}

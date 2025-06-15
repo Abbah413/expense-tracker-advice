@@ -1,34 +1,36 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS transactions;
 
-
-CREATE TABLE user (
-  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
-);
-
-CREATE TABLE transactions (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  bank TEXT NOT NULL,
-  transacted DATE NOT NULL,
-  uploaded DATETIME NOT NULL,
-  amount DECIMAL(10, 2) NOT NULL,
-  [description] TEXT NOT NULL,
-  category TEXT,
-  user_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES user(user_id)
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
 );
 
 CREATE TABLE categories (
-  category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  category TEXT,
-  budget DECIMAL(10, 2),
-  user_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES user(user_id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    budget REAL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    amount REAL NOT NULL,
+    date TEXT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
 
-
+CREATE TABLE advice (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id)
+);
 
