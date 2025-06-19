@@ -1,30 +1,34 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS advice;
 DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
+
 
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     category TEXT NOT NULL,
     budget REAL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
-    category TEXT NOT NULL,
-    amount REAL NOT NULL,
     date TEXT NOT NULL,
     description TEXT,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    deposit REAL DEFAULT 0,
+    withdrawal REAL DEFAULT 0,
+    balance REAL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
+
 
 CREATE TABLE advice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,4 +37,3 @@ CREATE TABLE advice (
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
-

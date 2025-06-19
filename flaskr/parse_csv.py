@@ -1,45 +1,41 @@
 import csv
-from flaskr import line_parsers
-from flaskr import models
-import re
-import io
 
-# Parse the uploaded bank statement and return the output file 
-def parse_csv(filename, line_parser=None):
-    csv_content = str
-    with open(filename, newline='') as csvfile:
-        csv_content = csvfile.read()
-
-    line_parser = line_parser or line_parsers.FindLineParser(csv_content)
-    csv_content = line_parser.StripNonCsvData(csv_content)
-    bank_name = line_parser.GetBankName()
-    csv_mem_file = io.StringIO(csv_content)
-    dialect = 'excel'
-    has_header = _HasHeader(csv_content)
-
-    if has_header:
-        reader = csv.DictReader(csv_mem_file, dialect=dialect)
-    else:
-        reader = csv.reader(csv_mem_file, dialect=dialect)
-
+def parse_csv(filepath):
     transactions = []
-    
-    for line_item in reader:
-        tran = line_parser.ParseLine(line_item, bank_name)
-        if tran:
-            transactions.append(tran)
 
+    def clean_amount(value):
+        try:
+            if not value or value.strip() in ('', '00.00'):
+                return 0.0
+            # Remove commas, currency symbols if any, strip whitespace
+            value_clean = value.replace(',', '').replace('₦', '').strip()
+            return float(value_clean)
+        except Exception as e:
+            print(f"⚠️ Could not parse amount '{value}': {e}")
+            return 0.0
+
+    with open(filepath, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            if not row or all(not v.strip() for v in row.values() if v):
+                # Skip empty or all-blank rows
+                continue
+
+            # Normalize keys in case CSV header varies
+            date = row.get('Date') or row.get('date') or ''
+            desc = row.get('Description') or row.get('description') or ''
+            deposits = row.get('Deposits') or row.get('Deposit') or ''
+            withdrawls = row.get('Withdrawls') or row.get('Withdrawals') or row.get('Withdrawal') or ''
+            balance = row.get('Balance') or ''
+
+            transactions.append({
+                'date': date.strip(),
+                'description': desc.strip(),
+                'deposit': clean_amount(deposits),
+                'withdrawal': clean_amount(withdrawls),
+                'balance': clean_amount(balance),
+            })
+
+    print(f"✅ Parsed {len(transactions)} transactions from CSV")
     return transactions
-
-
-def _HasHeader(csv_content):
-  first_line = csv_content.split('\n')[0]
-  has_date_1 = re.search(r'\d\d\d\d[/-]\d\d?[/-]\d\d?', first_line)
-  has_date_2 = re.search(r'\d\d?[/-]\d\d?[/-]\d\d\d\d', first_line)
-  has_amount = re.search(r'\d\.\d\d', first_line)
-  actual_content = has_amount and (has_date_1 or has_date_2)
-  return not actual_content
-
-
-
-

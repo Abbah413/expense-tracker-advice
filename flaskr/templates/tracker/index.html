@@ -5,146 +5,177 @@
 {% endblock %}
 
 {% block main %}
-    <form id="summary_table" method="post">
-        <div id="add-button" class="row">
-            <div class="col-auto me-auto">
-                <button type="button" class="btn btn-outline" onclick="addNew()" id="addcategory">
-                    <i class="bi bi-plus-square"> Add Category</i>
-                </button>
-            </div>
-            <div id="summary-logo" class="col-auto">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="48" height="48">
-            </div>
+<form id="summary_table" method="post">
+    <div id="add-button" class="row mb-3">
+        <div class="col-auto me-auto">
+            <button type="button" class="btn btn-outline-primary" onclick="addNew()" id="addcategory">
+                <i class="bi bi-plus-square"></i> Add Category
+            </button>
         </div>
-        <div id="table-content">
-            <table class="table table-hover" id="categorytable">
-                <thead id="table-head">
-                    <th class="category_header">Categories
-                        <i class="bi bi-exclamation-circle custom-tooltip"
-                        data-bs-toggle="tooltip" 
-                        data-bs-placement="right"
-                        data-bs-title='To add a new category click the add button. To remove a category click the "X" next to the category.'>
-                        </i>
-                    </th>
-                    <th class="budget_header">Budget</th>
-                    <th>Category Totals</th>
-                </thead>
-                <tbody>
-                    {% for row in categories %}
-                        <tr>
-                            <td class="py-1">
-                                <div class="input-group pt-1">
-                                    <button type="button" class="remove_button"><i class="bi bi-x-lg"></i></button>
-                                    <input class="form-control" type="text" value="{{ row.category }}" readonly>
-                                </div>
-                            </td>
-                            <td class="budget"><input class="form-control" type="number" placeholder="Budget" value="{{ row.budget }}"></td>
-                            {% if row.amount is none %}
-                                <td class="amount"></td>
-                            {% else %}
-                                <td class="amount">${{ row.amount | abs}} </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr class="totals">
-                        <th>Totals:</th>
-                        <td class="b-total"></td>
-                        <td class="a-total"></td>
-                    </tr>
-                    <tr class="income">
-                        <th>Income: 
-                            <i class="bi bi-exclamation-circle custom-tooltip"
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="right"
-                            data-bs-title='To display Income, set the category for your income to "income" on the transaction page.'>
-                            </i>
-                        </th>
-                        <td></td>
-                        {% for row in categories %}
-                            {% if row.category == 'Income' and row.amount %}
-                                <td class="t-income">${{ row.amount | abs}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr class="net">
-                        <th>Net:</th>
-                        <td></td>
-                        <td class="net-income"></td>
-                    </tr>
-                </tfoot>
-            </table>
+        <div id="summary-logo" class="col-auto">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="48" height="48">
         </div>
-    </form>
-
-    <!-- Chart container -->
-    <div style="max-width: 800px; margin: 2rem auto;">
-        <h3>Monthly Income vs Expenses</h3>
-        <canvas id="monthlyChart" height="300"></canvas>
     </div>
 
-    <!-- Your existing scripts -->
-    <script src="{{url_for('static', filename='edit_categories.js')}}"></script>
-    <script src="{{url_for('static', filename='update_summary.js')}}"></script>
-    <script src="{{url_for('static', filename='tooltips.js')}}"></script>
+    <div id="table-content">
+        <table class="table table-hover table-bordered nowrap" id="categorytable" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Category 
+                        <i class="bi bi-exclamation-circle custom-tooltip" data-bs-toggle="tooltip"
+                           title='Click "Add Category" to add, or "X" to remove a category.'></i>
+                    </th>
+                    <th>Budget</th>
+                    <th>Category Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in categories %}
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <input class="form-control category-name" type="text" value="{{ row.category }}" readonly>
+                        </div>
+                    </td>
+                    <td>
+                        <input class="form-control budget-input" type="number" placeholder="Budget" value="{{ row.budget }}">
+                    </td>
+                    <td class="amount">
+                        {% if row.amount is not none %}
+                        ₦{{ row.amount | abs }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger remove_button">
+                            <i class="bi bi-x-lg"></i> Remove
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Totals:</th>
+                    <td class="b-total"></td>
+                    <td class="a-total"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Income
+                        <i class="bi bi-exclamation-circle custom-tooltip" data-bs-toggle="tooltip"
+                           title='To show income, set your transaction category to "Income".'></i>
+                    </th>
+                    <td></td>
+                    <td class="t-income">
+                        {% for row in categories %}
+                            {% if row.category == 'Income' and row.amount %}
+                                ₦{{ row.amount | abs }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Net:</th>
+                    <td></td>
+                    <td class="net-income"></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart -->
+<div style="max-width: 800px; margin: 2rem auto;">
+    <h3>Monthly Income vs Expenses</h3>
+    <canvas id="monthlyChart" height="300"></canvas>
+</div>
 
-    <script>
-      // Fetch monthly data for the chart
-      fetch("{{ url_for('tracker.chart_data') }}")
-        .then(response => response.json())
-        .then(data => {
-          const ctx = document.getElementById('monthlyChart').getContext('2d');
+<!-- DataTables + Chart.js + custom scripts -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-          const months = data.map(item => item.month);
-          const income = data.map(item => item.income);
-          const expenses = data.map(item => item.expense);
+<script>
+$(document).ready(function() {
+    const table = $('#categorytable').DataTable({
+        responsive: true,
+        paging: true,
+        searching: true,
+        ordering: true,
+        order: [[0, 'asc']]
+    });
 
-          new Chart(ctx, {
+    // Remove button
+    $('#categorytable').on('click', '.remove_button', function() {
+        table.row($(this).closest('tr')).remove().draw();
+        // Optionally: send AJAX to backend to remove from DB
+    });
+
+    // Budget change listener
+    $('#categorytable').on('change', '.budget-input', function() {
+        const newBudget = $(this).val();
+        const category = $(this).closest('tr').find('.category-name').val();
+        // Optionally: send AJAX to save
+        console.log(`Budget for ${category} updated to ${newBudget}`);
+    });
+
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+
+// Chart.js
+fetch("{{ url_for('tracker.chart_data') }}")
+    .then(res => res.json())
+    .then(data => {
+        const ctx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctx, {
             type: 'line',
             data: {
-              labels: months,
-              datasets: [
-                {
-                  label: 'Income',
-                  data: income,
-                  borderColor: 'green',
-                  backgroundColor: 'rgba(0, 128, 0, 0.2)',
-                  fill: true,
-                  tension: 0.3,
-                },
-                {
-                  label: 'Expenses',
-                  data: expenses,
-                  borderColor: 'red',
-                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                  fill: true,
-                  tension: 0.3,
-                }
-              ]
+                labels: data.map(d => d.month),
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: data.map(d => d.income),
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(0,128,0,0.2)',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Expenses',
+                        data: data.map(d => d.expense),
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255,0,0,0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }
+                ]
             },
             options: {
-              responsive: true,
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  title: {
-                    display: true,
-                    text: 'Amount (₦)'
-                  }
-                },
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Month'
-                  }
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (₦)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
                 }
-              }
             }
-          });
         });
-    </script>
+    });
+</script>
 {% endblock %}
